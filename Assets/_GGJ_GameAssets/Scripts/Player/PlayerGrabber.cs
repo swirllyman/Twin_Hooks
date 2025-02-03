@@ -273,6 +273,13 @@ public class PlayerGrabber : MonoBehaviour
                 attachedGrabbable = hit.collider.GetComponent<Grabbable>();
                 if (attachedGrabbable != null)
                 {
+                    //If tile is Grabbable Terrain, destroy it in grid
+                    if(attachedGrabbable == hit.collider.GetComponent<GrabbableTerrain>())
+                    {
+                        Debug.Log("Hit Grabbable Terrain!");
+                        DestroyTile();
+                    }
+
                     attachedGrabbable.transform.SetParent(grabberTip);
                     attachedGrabbable.transform.localPosition = Vector3.zero;
                     attachedGrabbable.PickUp();

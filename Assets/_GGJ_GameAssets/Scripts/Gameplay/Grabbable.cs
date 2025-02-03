@@ -59,7 +59,7 @@ public class Grabbable : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(myBody.linearVelocity.magnitude > minSoundHitSpeed && soundTimer <= 0.0f)
+        if(myBody != null && (myBody.linearVelocity.magnitude > minSoundHitSpeed && soundTimer <= 0.0f))
         {
             audioSource.PlayOneShot(hitGroundClip);
             soundTimer = minSoundCD;
