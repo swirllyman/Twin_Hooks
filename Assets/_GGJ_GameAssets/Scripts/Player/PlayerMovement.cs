@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Animator myAnim;
     [SerializeField] LayerMask collisionMask;
     [SerializeField] float resetDistance = 50;
+    [SerializeField] PlayerGrabber grabber;
 
     Rigidbody2D myBody;
     CapsuleCollider2D myCollider;
@@ -67,7 +68,6 @@ public class PlayerMovement : MonoBehaviour
         if (pause)
         {
             movePos = Vector2.zero;
-
         }
     }
 
@@ -79,6 +79,8 @@ public class PlayerMovement : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         startPosition = transform.position;
+
+        grabber = GetComponent<PlayerGrabber>();
     }
 
     // Update is called once per frame
@@ -251,6 +253,28 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log("Jumping");
         myAnim.SetBool("Jumping", true);
         myBody.AddForce(Vector3.up * initialJumpForce, ForceMode2D.Impulse);
+        if (jumpRoutine != null) StopCoroutine(jumpRoutine);
+        jumpRoutine = StartCoroutine(ResetJump());
+        audioSource.Stop();
+        audioSource.PlayOneShot(jumpClip);
+    }
+    
+    void KickJump()
+    {
+        if (grabber == null)
+        {
+            Debug.Log("Error: grabber not found. Exiting KickJump");
+            return; 
+        }        
+        
+        justJumped = true;
+        isOnSlope = false;
+        //Debug.Log("Jumping");
+        myAnim.SetBool("Jumping", true);
+        //Add force in aim direction
+        
+        myBody.AddForce(Vector3.up * initialJumpForce, ForceMode2D.Impulse);
+
         if (jumpRoutine != null) StopCoroutine(jumpRoutine);
         jumpRoutine = StartCoroutine(ResetJump());
         audioSource.Stop();

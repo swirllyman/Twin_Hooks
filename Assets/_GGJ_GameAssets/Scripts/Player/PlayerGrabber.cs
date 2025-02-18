@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 
 
 [RequireComponent(typeof(Aimer2D))]
@@ -124,6 +126,7 @@ public class PlayerGrabber : MonoBehaviour
             }
         }
     }
+
 
     void UpdateAim()
     {
@@ -277,6 +280,8 @@ public class PlayerGrabber : MonoBehaviour
                     if(attachedGrabbable == hit.collider.GetComponent<GrabbableTerrain>())
                     {
                         Debug.Log("Hit Grabbable Terrain!");
+                        //attachedGrabbable = GetTilePos();
+                        attachedGrabbable = CreateGrabbedTileCopy();
                         DestroyTile();
                     }
 
@@ -290,6 +295,42 @@ public class PlayerGrabber : MonoBehaviour
         }
     }
 
+    public void KickJump()
+    {
+        // Launch/add force to player in aimed direction.
+        // Throw attached grabbable in opposite direction
+    }
+
+    public GrabbableTerrain CreateGrabbedTileCopy()
+    {
+        //Get tile coordinate & object hit by grabber
+        //Get tile sprite 
+        //Create new Grabbable instance
+        //Assign sprite to tile
+        //Translate tile to grabber collision point
+
+        var tpos = m_StaticTileMap.WorldToCell(worldPoint);
+        if (m_StaticTileMap.GetTile(tpos) != null)
+        {
+            Debug.Log("Static Tile at position, cannot destroy");
+            return null;
+        }
+        //Destroy the tile at the position on all tilemaps
+        tpos = m_TileMap.WorldToCell(worldPoint);
+        
+        TileBase tile = m_TileMap.GetTile(tpos);
+
+        GrabbableTerrain gtCopy = tile.GetComponent<GrabbableTerrain>();
+        GameObject gtObject = gtCopy.grabbablePrefab;
+        if (gtObject != null)
+        {
+            gtObject.GetComponent<SpriteRenderer>().sprite = gtCopy.gameObject.GetComponent<SpriteRenderer>().sprite;
+        }
+        gtCopy = GameObject.Instantiate(gtObject).GetComponent<GrabbableTerrain>();
+
+        return gtCopy;
+    }
+
     public void DestroyTile()
     {
         //Check if the tile contains a static tile, if so, return
@@ -299,10 +340,25 @@ public class PlayerGrabber : MonoBehaviour
             Debug.Log("Static Tile at position, cannot destroy");
             return;
         }
-
         //Destroy the tile at the position on all tilemaps
         tpos = m_TileMap.WorldToCell(worldPoint);
         m_TileMap.SetTile(tpos, null);
+    }
+    public TileBase GetTilePos()
+    {
+        //Check if the tile contains a static tile, if so, return
+        var tpos = m_StaticTileMap.WorldToCell(worldPoint);
+        if (m_StaticTileMap.GetTile(tpos) != null)
+        {
+            Debug.Log("Static Tile at position, cannot destroy");
+            return null;
+        }
+
+        //Remove the tile at the position on all tilemaps
+        tpos = m_TileMap.WorldToCell(worldPoint);
+        return m_TileMap.GetTile(tpos);
+        //return m_TileMap.GetTile(tpos);
+        //m_TileMap.SetTile(tpos, null);
     }
 
     public Vector3[] Plot(Rigidbody2D body, Vector2 pos, Vector2 vel, int steps)

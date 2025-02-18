@@ -20,6 +20,11 @@ public class Aimer2D : MonoBehaviour
         playerCameraFollow.transform.parent = null;
     }
 
+    public Vector3 GetAimDirection()
+    {
+        return aimDirection;
+    }
+
     // Update is called once per frame
     void Update()
     {
