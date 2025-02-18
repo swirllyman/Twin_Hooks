@@ -272,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log("Jumping");
         myAnim.SetBool("Jumping", true);
         //Add force in aim direction
-        
+        Vector3 kickJumpDirection = grabber.get
         myBody.AddForce(Vector3.up * initialJumpForce, ForceMode2D.Impulse);
 
         if (jumpRoutine != null) StopCoroutine(jumpRoutine);
