@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask collisionMask;
     [SerializeField] float resetDistance = 50;
     [SerializeField] PlayerGrabber grabber;
+    [SerializeField] Aimer2D aimer;
 
     Rigidbody2D myBody;
     CapsuleCollider2D myCollider;
@@ -53,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
     private float slopeDownAngle;
     private float slopeAngle;
     private float lastSlopeAngle;
+
+    public bool justKickJumped = false;
 
     bool justJumped = false;
     bool grounded = false;
@@ -241,7 +244,10 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Jump();
+                if (grabber != null && grabber.attachedGrabbable != null)
+                    KickJump();
+                //else
+                //    Jump();
             }
         }
     }
@@ -268,13 +274,14 @@ public class PlayerMovement : MonoBehaviour
         }        
         
         justJumped = true;
+        justKickJumped = false;
         isOnSlope = false;
         //Debug.Log("Jumping");
         myAnim.SetBool("Jumping", true);
         //Add force in aim direction
-        Vector3 kickJumpDirection = grabber.get
-        myBody.AddForce(Vector3.up * initialJumpForce, ForceMode2D.Impulse);
-
+        Vector3 kickJumpDirection = aimer.GetAimDirection();
+        myBody.AddForce(kickJumpDirection * initialJumpForce, ForceMode2D.Impulse);
+        grabber.DropAttachedGrabbable();
         if (jumpRoutine != null) StopCoroutine(jumpRoutine);
         jumpRoutine = StartCoroutine(ResetJump());
         audioSource.Stop();
@@ -304,6 +311,7 @@ public class PlayerMovement : MonoBehaviour
         if (jumpRoutine != null) StopCoroutine(jumpRoutine);
         myAnim.SetBool("Jumping", false);
         justJumped = false;
+        justKickJumped = false;
     }
     #endregion
 

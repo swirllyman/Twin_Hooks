@@ -7,6 +7,7 @@ using static UnityEditor.PlayerSettings;
 
 
 [RequireComponent(typeof(Aimer2D))]
+[RequireComponent(typeof(PlayerMovement))]
 public class PlayerGrabber : MonoBehaviour
 {
     [SerializeField] Transform grabberTip;
@@ -27,6 +28,7 @@ public class PlayerGrabber : MonoBehaviour
     [SerializeField] AudioClip detachClip;
     [SerializeField] AudioClip throwClip;
     [SerializeField] Tilemap m_TileMap, m_StaticTileMap;
+    [SerializeField] PlayerMovement m_Movement;
 
     internal Grabbable attachedGrabbable;
     internal bool holding = false;
@@ -49,6 +51,7 @@ public class PlayerGrabber : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         mybody = GetComponent<Rigidbody2D>();
         aimer = GetComponent<Aimer2D>();
+        m_Movement = GetComponent<PlayerMovement>();
         grabberTip.parent = null;
         lineRend.enabled = false;
         trajectoryRend.enabled = false;
@@ -226,9 +229,14 @@ public class PlayerGrabber : MonoBehaviour
 
                 if (holding)
                 {
-                    //Debug.Log("Throwing");
                     justShot = true;
-                    attachedGrabbable.Throw(aimer.aimDirection, throwForce);
+                    if (m_Movement.justKickJumped)
+                        attachedGrabbable.Throw(-aimer.aimDirection, throwForce);
+                    else
+                        attachedGrabbable.Throw(aimer.aimDirection, throwForce);
+
+                    //Debug.Log("Throwing");
+                    //attachedGrabbable.Throw(aimer.aimDirection, throwForce);
                     audioSource.PlayOneShot(throwClip);
                 }
                 else
@@ -277,13 +285,13 @@ public class PlayerGrabber : MonoBehaviour
                 if (attachedGrabbable != null)
                 {
                     //If tile is Grabbable Terrain, destroy it in grid
-                    if(attachedGrabbable == hit.collider.GetComponent<GrabbableTerrain>())
+                    /*if(attachedGrabbable == hit.collider.GetComponent<GrabbableTerrain>())
                     {
                         Debug.Log("Hit Grabbable Terrain!");
                         //attachedGrabbable = GetTilePos();
                         attachedGrabbable = CreateGrabbedTileCopy();
                         DestroyTile();
-                    }
+                    }*/
 
                     attachedGrabbable.transform.SetParent(grabberTip);
                     attachedGrabbable.transform.localPosition = Vector3.zero;
