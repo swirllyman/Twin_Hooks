@@ -31,6 +31,7 @@ public class PlayerGrabber : MonoBehaviour
     [SerializeField] PlayerMovement m_Movement;
 
     internal Grabbable attachedGrabbable;
+    internal GrabbableTerrain attachedTerrain;
     internal bool holding = false;
     AudioSource audioSource;
     Rigidbody2D mybody;
@@ -278,27 +279,40 @@ public class PlayerGrabber : MonoBehaviour
             var pullableObject = hit.collider.GetComponentInParent(typeof(GrabPlatform)) as GrabPlatform;
             if (pullableObject != null) {
                 pullableObject.OnActivate();
-            } 
-            else 
-            {
-                attachedGrabbable = hit.collider.GetComponent<Grabbable>();
-                if (attachedGrabbable != null)
+            }
+            else if (hit.collider.GetComponent<Grabbable>() != null) { 
+                    attachedGrabbable = hit.collider.GetComponent<Grabbable>();
+                    if (attachedGrabbable != null)
+                    {
+                        attachedGrabbable.transform.SetParent(grabberTip);
+                        attachedGrabbable.transform.localPosition = Vector3.zero;
+                        attachedGrabbable.PickUp();
+                        audioSource.PlayOneShot(attachClip);
+                        audioSource.PlayOneShot(pullInClip);
+                    }
+                }
+            else if (hit.collider.GetComponent<GrabbableTerrain>() != null){
+                attachedTerrain = hit.collider.GetComponent<GrabbableTerrain>();
+                if (attachedTerrain != null)
                 {
                     //If tile is Grabbable Terrain, destroy it in grid
-                    if(attachedGrabbable == hit.collider.GetComponent<GrabbableTerrain>())
+                    if (attachedTerrain == hit.collider.GetComponent<GrabbableTerrain>())
                     {
                         Debug.Log("Hit Grabbable Terrain!");
-                        //attachedGrabbable = GetTilePos();
-                        attachedGrabbable = CreateGrabbedTileCopy();
+                        //attachedTerrain = GetTilePos();
+                        attachedTerrain = CreateGrabbedTileCopy();
                         DestroyTile();
                     }
 
-                    attachedGrabbable.transform.SetParent(grabberTip);
-                    attachedGrabbable.transform.localPosition = Vector3.zero;
-                    attachedGrabbable.PickUp();
+                    attachedTerrain.transform.SetParent(grabberTip);
+                    attachedTerrain.transform.localPosition = Vector3.zero;
+                    attachedTerrain.PickUp();
                     audioSource.PlayOneShot(attachClip);
                     audioSource.PlayOneShot(pullInClip);
                 }
+            }
+            else {
+            
             }
         }
     }
@@ -316,26 +330,31 @@ public class PlayerGrabber : MonoBehaviour
         //Create new Grabbable instance
         //Assign sprite to tile
         //Translate tile to grabber collision point
-        attachedGrabbable = null;
+        attachedTerrain = null;
         var tpos = m_StaticTileMap.WorldToCell(worldPoint);
         if (m_StaticTileMap.GetTile(tpos) != null)
         {
             Debug.Log("Static Tile at position, cannot destroy");
             return null;
         }
-        //Destroy the tile at the position on all tilemaps
+
         tpos = m_TileMap.WorldToCell(worldPoint);
         
         TileBase tile = m_TileMap.GetTile(tpos);
 
         GrabbableTerrain gtCopy = tile.GetComponent<GrabbableTerrain>();
-        GameObject gtObject = gtCopy.grabbablePrefab;
-        //if (gtObject != null)
-        //{
-        //    //gtObject.GetComponent<SpriteRenderer>().sprite = gtCopy.gameObject.GetComponent<TilemapRenderer>().;
-        //    gtObject.GetComponent<SpriteRenderer>().sprite = m_TileMap.GetSprite(tpos);
-        //}
-        gtCopy = GameObject.Instantiate(gtObject).GetComponent<GrabbableTerrain>();
+        //GameObject gtObject = gtCopy.gameObject;
+        GameObject gtObject = GameObject.Instantiate(gtCopy.grabbablePrefab);
+        if (gtObject != null)
+        {
+            gtObject.transform.SetParent(grabberTip);
+            gtObject.transform.localPosition = Vector3.zero;
+            gtObject.transform.localRotation = Quaternion.identity;
+            gtObject.GetComponent<SpriteRenderer>().sprite = m_TileMap.GetSprite(tpos);
+            //gtObject.GetComponent<TilemapRenderer>(). = m_TileMap.GetSprite(tpos);
+        }
+        //gtCopy = GameObject.Instantiate(gtObject).GetComponent<GrabbableTerrain>();
+        gtCopy = gtObject.GetComponent<GrabbableTerrain>();
 
         return gtCopy;
     }
