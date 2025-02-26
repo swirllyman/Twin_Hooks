@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static UnityEditor.PlayerSettings;
@@ -29,6 +28,7 @@ public class PlayerGrabber : MonoBehaviour
     [SerializeField] AudioClip throwClip;
     [SerializeField] Tilemap m_TileMap, m_StaticTileMap;
     [SerializeField] PlayerMovement m_Movement;
+    [SerializeField] GameObject grabbableTerrainPrefab;
 
     internal Grabbable attachedGrabbable;
     internal GrabbableTerrain attachedTerrain;
@@ -293,6 +293,7 @@ public class PlayerGrabber : MonoBehaviour
                 }
             else if (hit.collider.GetComponent<GrabbableTerrain>() != null){
                 attachedTerrain = hit.collider.GetComponent<GrabbableTerrain>();
+                Grabbable grabbableTerrainClone = null;
                 if (attachedTerrain != null)
                 {
                     //If tile is Grabbable Terrain, destroy it in grid
@@ -300,13 +301,13 @@ public class PlayerGrabber : MonoBehaviour
                     {
                         Debug.Log("Hit Grabbable Terrain!");
                         //attachedTerrain = GetTilePos();
-                        attachedTerrain = CreateGrabbedTileCopy();
+                        grabbableTerrainClone = CreateGrabbedTileCopy();
                         DestroyTile();
                     }
 
-                    attachedTerrain.transform.SetParent(grabberTip);
-                    attachedTerrain.transform.localPosition = Vector3.zero;
-                    attachedTerrain.PickUp();
+                    grabbableTerrainClone.transform.SetParent(grabberTip);
+                    grabbableTerrainClone.transform.localPosition = Vector3.zero;
+                    grabbableTerrainClone.PickUp();
                     audioSource.PlayOneShot(attachClip);
                     audioSource.PlayOneShot(pullInClip);
                 }
@@ -323,7 +324,7 @@ public class PlayerGrabber : MonoBehaviour
         // Throw attached grabbable in opposite direction
     }
 
-    public GrabbableTerrain CreateGrabbedTileCopy()
+    public Grabbable CreateGrabbedTileCopy()
     {
         //Get tile coordinate & object hit by grabber
         //Get tile sprite 
@@ -340,11 +341,12 @@ public class PlayerGrabber : MonoBehaviour
 
         tpos = m_TileMap.WorldToCell(worldPoint);
         
-        TileBase tile = m_TileMap.GetTile(tpos);
+        TileBase myTile = m_TileMap.GetTile(tpos);
 
-        GrabbableTerrain gtCopy = tile.GetComponent<GrabbableTerrain>();
+        Grabbable gtCopy;
         //GameObject gtObject = gtCopy.gameObject;
-        GameObject gtObject = GameObject.Instantiate(gtCopy.grabbablePrefab);
+        GameObject gtObject = GameObject.Instantiate(grabbableTerrainPrefab);
+
         if (gtObject != null)
         {
             gtObject.transform.SetParent(grabberTip);
@@ -354,7 +356,7 @@ public class PlayerGrabber : MonoBehaviour
             //gtObject.GetComponent<TilemapRenderer>(). = m_TileMap.GetSprite(tpos);
         }
         //gtCopy = GameObject.Instantiate(gtObject).GetComponent<GrabbableTerrain>();
-        gtCopy = gtObject.GetComponent<GrabbableTerrain>();
+        gtCopy = gtObject.GetComponent<Grabbable>();
 
         return gtCopy;
     }
