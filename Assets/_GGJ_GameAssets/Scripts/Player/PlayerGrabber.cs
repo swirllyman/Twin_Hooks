@@ -299,7 +299,9 @@ public class PlayerGrabber : MonoBehaviour
                     //If tile is Grabbable Terrain, destroy it in grid
                     if (attachedTerrain == hit.collider.GetComponent<GrabbableTerrain>())
                     {
-                        Debug.Log("Hit Grabbable Terrain!");
+                        worldPoint = hit.point;
+                        Debug.Log("Hit Grabbable Terrain at " + worldPoint);
+
                         //attachedTerrain = GetTilePos();
                         grabbableTerrainClone = CreateGrabbedTileCopy();
                         DestroyTile();
@@ -327,19 +329,23 @@ public class PlayerGrabber : MonoBehaviour
     public Grabbable CreateGrabbedTileCopy()
     {
         //Get tile coordinate & object hit by grabber
+        //Create new Grabbable instance from prefab
+        //Attach instance to grabber tip
         //Get tile sprite 
-        //Create new Grabbable instance
-        //Assign sprite to tile
-        //Translate tile to grabber collision point
+        //Assign sprite of the hit tile to the to grabbable prefab
+        //Destroy hit tile
+
         attachedTerrain = null;
-        var tpos = m_StaticTileMap.WorldToCell(worldPoint);
-        if (m_StaticTileMap.GetTile(tpos) != null)
-        {
-            Debug.Log("Static Tile at position, cannot destroy");
-            return null;
-        }
+        Vector3Int tpos;
+        //var tpos = m_StaticTileMap.WorldToCell(worldPoint);
+        //if (m_StaticTileMap.GetTile(tpos) != null)
+        //{
+        //    Debug.Log("Static Tile at position, cannot destroy");
+        //    return null;
+        //}
 
         tpos = m_TileMap.WorldToCell(worldPoint);
+        Debug.Log("Hit tile " + tpos);
         
         TileBase myTile = m_TileMap.GetTile(tpos);
 
@@ -353,6 +359,9 @@ public class PlayerGrabber : MonoBehaviour
             gtObject.transform.localPosition = Vector3.zero;
             gtObject.transform.localRotation = Quaternion.identity;
             gtObject.GetComponent<SpriteRenderer>().sprite = m_TileMap.GetSprite(tpos);
+            gtObject.GetComponent<SpriteRenderer>().size *= 4;
+            Debug.Log("Got the sprite " + gtObject.GetComponent<SpriteRenderer>().sprite);
+            
             //gtObject.GetComponent<TilemapRenderer>(). = m_TileMap.GetSprite(tpos);
         }
         //gtCopy = GameObject.Instantiate(gtObject).GetComponent<GrabbableTerrain>();
@@ -364,28 +373,30 @@ public class PlayerGrabber : MonoBehaviour
     public void DestroyTile()
     {
         //Check if the tile contains a static tile, if so, return
-        var tpos = m_StaticTileMap.WorldToCell(worldPoint);
-        if (m_StaticTileMap.GetTile(tpos) != null)
-        {
-            Debug.Log("Static Tile at position, cannot destroy");
-            return;
-        }
+        var tpos = m_TileMap.WorldToCell(worldPoint);
+        //if (m_StaticTileMap.GetTile(tpos) != null)
+        //{
+        //    Debug.Log("Static Tile at position, cannot destroy");
+        //    return;
+        //}
         //Destroy the tile at the position on all tilemaps
         tpos = m_TileMap.WorldToCell(worldPoint);
+        Debug.Log("Attempting to destroy at " + tpos);
         m_TileMap.SetTile(tpos, null);
     }
     public TileBase GetTilePos()
     {
         //Check if the tile contains a static tile, if so, return
-        var tpos = m_StaticTileMap.WorldToCell(worldPoint);
-        if (m_StaticTileMap.GetTile(tpos) != null)
-        {
-            Debug.Log("Static Tile at position, cannot destroy");
-            return null;
-        }
+        var tpos = m_TileMap.WorldToCell(worldPoint);
+        //if (m_StaticTileMap.GetTile(tpos) != null)
+        //{
+        //    Debug.Log("Static Tile at position, cannot destroy");
+        //    return null;
+        //}
 
         //Remove the tile at the position on all tilemaps
         tpos = m_TileMap.WorldToCell(worldPoint);
+        Debug.Log("Getting tile at " + tpos);
         return m_TileMap.GetTile(tpos);
         //return m_TileMap.GetTile(tpos);
         //m_TileMap.SetTile(tpos, null);
