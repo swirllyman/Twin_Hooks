@@ -182,7 +182,7 @@ public class PlayerGrabber : MonoBehaviour
                 StopShot();
             }
         }
-        else if (Input.GetMouseButton(1) &! onCD)
+        else if (Input.GetMouseButtonUp(1) &! onCD)
         {
             if (hit.collider != null && canHit)
             {
@@ -304,14 +304,16 @@ public class PlayerGrabber : MonoBehaviour
 
                         //attachedTerrain = GetTilePos();
                         grabbableTerrainClone = CreateGrabbedTileCopy();
+
+                        grabbableTerrainClone.transform.SetParent(grabberTip);
+                        grabbableTerrainClone.transform.localPosition = Vector3.zero;
+                        grabbableTerrainClone.PickUp();
+                        audioSource.PlayOneShot(attachClip);
+                        audioSource.PlayOneShot(pullInClip);
+
                         DestroyTile();
                     }
 
-                    grabbableTerrainClone.transform.SetParent(grabberTip);
-                    grabbableTerrainClone.transform.localPosition = Vector3.zero;
-                    grabbableTerrainClone.PickUp();
-                    audioSource.PlayOneShot(attachClip);
-                    audioSource.PlayOneShot(pullInClip);
                 }
             }
             else {
@@ -336,7 +338,7 @@ public class PlayerGrabber : MonoBehaviour
         //Destroy hit tile
 
         attachedTerrain = null;
-        Vector3Int tpos;
+        //Vector3Int tpos;
         //var tpos = m_StaticTileMap.WorldToCell(worldPoint);
         //if (m_StaticTileMap.GetTile(tpos) != null)
         //{
@@ -344,7 +346,7 @@ public class PlayerGrabber : MonoBehaviour
         //    return null;
         //}
 
-        tpos = m_TileMap.WorldToCell(worldPoint);
+        var tpos = m_TileMap.WorldToCell(worldPoint);
         Debug.Log("Hit tile " + tpos);
         
         TileBase myTile = m_TileMap.GetTile(tpos);
@@ -380,7 +382,7 @@ public class PlayerGrabber : MonoBehaviour
         //    return;
         //}
         //Destroy the tile at the position on all tilemaps
-        tpos = m_TileMap.WorldToCell(worldPoint);
+        //tpos = m_TileMap.WorldToCell(worldPoint);
         Debug.Log("Attempting to destroy at " + tpos);
         m_TileMap.SetTile(tpos, null);
     }

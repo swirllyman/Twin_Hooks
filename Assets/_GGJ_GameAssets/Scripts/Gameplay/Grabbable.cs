@@ -48,6 +48,7 @@ public class Grabbable : MonoBehaviour
     {
         myCollider.enabled = true;
         myBody.bodyType = RigidbodyType2D.Dynamic;
+        Debug.Log("Dropped");
     }
 
     public virtual void Throw(Vector3 direction, float force)
