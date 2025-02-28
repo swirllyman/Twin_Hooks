@@ -293,9 +293,11 @@ public class PlayerGrabber : MonoBehaviour
                 }
             else if (hit.collider.GetComponent<GrabbableTerrain>() != null){
                 attachedTerrain = hit.collider.GetComponent<GrabbableTerrain>();
+                attachedGrabbable = hit.collider.GetComponent<Grabbable>();
                 Grabbable grabbableTerrainClone = null;
                 if (attachedTerrain != null)
                 {
+
                     //If tile is Grabbable Terrain, destroy it in grid
                     if (attachedTerrain == hit.collider.GetComponent<GrabbableTerrain>())
                     {
