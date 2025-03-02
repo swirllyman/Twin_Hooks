@@ -318,6 +318,12 @@ public class PlayerGrabber : MonoBehaviour
 
                 }
             }
+            else if(hit.collider.GetComponent<GrabLauncher>() != null)
+            {
+                //get angle
+                //make player jump in angle hit
+                GetComponent<PlayerMovement>().LaunchJump();
+            }
             else {
             
             }

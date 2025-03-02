@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Extras")]
     [SerializeField] Animator myAnim;
+    [SerializeField] float initialLaunchForce = 6f;
+    [SerializeField] float sustainedLaunchForce = .8f;
     [SerializeField] LayerMask collisionMask;
     [SerializeField] float resetDistance = 50;
     [SerializeField] PlayerGrabber grabber;
@@ -56,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastSlopeAngle;
 
     public bool justKickJumped = false;
-
+    public bool justLaunched = false;
     bool justJumped = false;
     bool grounded = false;
     bool wasGrounded = false;
@@ -274,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
         }        
         
         justJumped = true;
-        justKickJumped = false;
+        justKickJumped = true;
         isOnSlope = false;
         //Debug.Log("Jumping");
         myAnim.SetBool("Jumping", true);
@@ -282,6 +284,30 @@ public class PlayerMovement : MonoBehaviour
         Vector3 kickJumpDirection = aimer.GetAimDirection();
         myBody.AddForce(kickJumpDirection * initialJumpForce, ForceMode2D.Impulse);
         grabber.DropAttachedGrabbable();
+        if (jumpRoutine != null) StopCoroutine(jumpRoutine);
+        jumpRoutine = StartCoroutine(ResetJump());
+        audioSource.Stop();
+        audioSource.PlayOneShot(jumpClip);
+    }
+    
+    public void LaunchJump()
+    {
+        if (grabber == null)
+        {
+            Debug.Log("Error: grabber not found. Exiting KickJump");
+            return; 
+        }        
+        
+        justJumped = false;
+        justKickJumped = false;
+        justLaunched = true;
+        isOnSlope = false;
+        //Debug.Log("Jumping");
+        myAnim.SetBool("Launching!", true);
+        //Add force in aim direction
+        Vector3 launchDirection = aimer.GetAimDirection();
+        myBody.AddForce(launchDirection * initialLaunchForce, ForceMode2D.Impulse);
+        //grabber.DropAttachedGrabbable();
         if (jumpRoutine != null) StopCoroutine(jumpRoutine);
         jumpRoutine = StartCoroutine(ResetJump());
         audioSource.Stop();
