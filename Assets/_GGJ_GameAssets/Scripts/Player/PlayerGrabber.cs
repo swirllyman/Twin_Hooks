@@ -280,24 +280,12 @@ public class PlayerGrabber : MonoBehaviour
             if (pullableObject != null) {
                 pullableObject.OnActivate();
             }
-            else if (hit.collider.GetComponent<Grabbable>() != null) { 
-                    attachedGrabbable = hit.collider.GetComponent<Grabbable>();
-                    if (attachedGrabbable != null)
-                    {
-                        attachedGrabbable.transform.SetParent(grabberTip);
-                        attachedGrabbable.transform.localPosition = Vector3.zero;
-                        attachedGrabbable.PickUp();
-                        audioSource.PlayOneShot(attachClip);
-                        audioSource.PlayOneShot(pullInClip);
-                    }
-                }
             else if (hit.collider.GetComponent<GrabbableTerrain>() != null){
                 attachedTerrain = hit.collider.GetComponent<GrabbableTerrain>();
-                attachedGrabbable = hit.collider.GetComponent<Grabbable>();
+                //attachedGrabbable = hit.collider.GetComponent<Grabbable>();
                 Grabbable grabbableTerrainClone = null;
                 if (attachedTerrain != null)
                 {
-
                     //If tile is Grabbable Terrain, destroy it in grid
                     if (attachedTerrain == hit.collider.GetComponent<GrabbableTerrain>())
                     {
@@ -306,13 +294,12 @@ public class PlayerGrabber : MonoBehaviour
 
                         //attachedTerrain = GetTilePos();
                         grabbableTerrainClone = CreateGrabbedTileCopy();
-
                         grabbableTerrainClone.transform.SetParent(grabberTip);
                         grabbableTerrainClone.transform.localPosition = Vector3.zero;
                         grabbableTerrainClone.PickUp();
                         audioSource.PlayOneShot(attachClip);
                         audioSource.PlayOneShot(pullInClip);
-
+                        attachedGrabbable = grabbableTerrainClone;
                         DestroyTile();
                     }
 
@@ -324,6 +311,17 @@ public class PlayerGrabber : MonoBehaviour
                 //make player jump in angle hit
                 GetComponent<PlayerMovement>().LaunchJump();
             }
+            else if (hit.collider.GetComponent<Grabbable>() != null) { 
+                    attachedGrabbable = hit.collider.GetComponent<Grabbable>();
+                    if (attachedGrabbable != null)
+                    {
+                        attachedGrabbable.transform.SetParent(grabberTip);
+                        attachedGrabbable.transform.localPosition = Vector3.zero;
+                        attachedGrabbable.PickUp();
+                        audioSource.PlayOneShot(attachClip);
+                        audioSource.PlayOneShot(pullInClip);
+                    }
+                }
             else {
             
             }
