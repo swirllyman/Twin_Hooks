@@ -295,7 +295,7 @@ public class PlayerGrabber : MonoBehaviour
                         //attachedTerrain = GetTilePos();
                         grabbableTerrainClone = CreateGrabbedTileCopy();
                         grabbableTerrainClone.transform.SetParent(grabberTip);
-                        grabbableTerrainClone.transform.localPosition = Vector3.zero;
+                        //grabbableTerrainClone.transform.localPosition = Vector3.zero;
                         grabbableTerrainClone.PickUp();
                         audioSource.PlayOneShot(attachClip);
                         audioSource.PlayOneShot(pullInClip);
@@ -367,7 +367,7 @@ public class PlayerGrabber : MonoBehaviour
             gtObject.transform.localPosition = Vector3.zero;
             gtObject.transform.localRotation = Quaternion.identity;
             gtObject.GetComponent<SpriteRenderer>().sprite = m_TileMap.GetSprite(tpos);
-            gtObject.GetComponent<SpriteRenderer>().size *= 4;
+            //gtObject.GetComponent<SpriteRenderer>().size *= 4;
             Debug.Log("Got the sprite " + gtObject.GetComponent<SpriteRenderer>().sprite);
             
             //gtObject.GetComponent<TilemapRenderer>(). = m_TileMap.GetSprite(tpos);
