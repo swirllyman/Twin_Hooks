@@ -15,6 +15,9 @@ public class BasicEnemyMovement : MonoBehaviour
     [SerializeField] float wallDistanceCheck = .08f;
     [SerializeField] Vector2 verticalVelocityMax = new Vector2(3, 3);
     [SerializeField] AudioClip runClip;
+    [SerializeField] bool canTurnOnEdge;
+    [SerializeField] Transform edgeDetector;
+
 
     [Header("Jumping")]
     [SerializeField] float initialJumpForce = 2.5f;
@@ -55,11 +58,13 @@ public class BasicEnemyMovement : MonoBehaviour
 
     bool justJumped = false;
     bool grounded = false;
+    bool onEdge = false;
     bool wasGrounded = false;
     bool wasMoving = false;
     bool facingRight = true;
 
     internal bool pauseMovement = false;
+
 
     internal void PauseMovement(bool pause)
     {
@@ -67,13 +72,21 @@ public class BasicEnemyMovement : MonoBehaviour
         if (pause)
         {
             movePos = Vector2.zero;
-
         }
     }
 
     #region Mono
     private void Awake()
     {
+        EnemyBase e = GetComponent<EnemyBase>();
+        if(e != null)
+        {
+            e.onPickup += PauseMovement;
+        }
+
+        if (canTurnOnEdge && edgeDetector != null)
+            Debug.Log("Edge Detector found.");
+            
         myBody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<CapsuleCollider2D>();
         audioSource = GetComponent<AudioSource>();
@@ -87,6 +100,8 @@ public class BasicEnemyMovement : MonoBehaviour
     void Update()
     {
         CheckGrounded();
+        if (canTurnOnEdge)
+            CheckEdge();
 
         if (!pauseMovement)
         {
@@ -94,7 +109,7 @@ public class BasicEnemyMovement : MonoBehaviour
             CheckJump();
         }
         CheckReset();
-        UpdateAnimation();
+        //UpdateAnimation();
     }
 
     void CheckMovementDirection()
@@ -109,7 +124,8 @@ public class BasicEnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        SlopeCheck();
+        //Every fixed update, check the slope, update movement and update jump
+        CheckSlope();
         UpdateMovement();
         UpdateJump();
     }
@@ -135,9 +151,10 @@ public class BasicEnemyMovement : MonoBehaviour
 
     void UpdateMovement()
     {
-
+        //moveDir is now Get vector2 with x = movePos.x times moveSpeedGround if grounded or times moveSpeedAir if not grounded; y = 0
         moveDir = new Vector2(movePos.x * (grounded ? moveSpeedGround : moveSpeedAir), 0);
 
+        //If Abs value of moveDir x is over 0(have any sort of x movement), and was NOT moving, call MovingChanged
         if(Mathf.Abs(moveDir.x) > 0)
         {
             if (!wasMoving)
@@ -145,7 +162,7 @@ public class BasicEnemyMovement : MonoBehaviour
                 MovingChanged();
             }
         }
-        else
+        else //if not and was moving, call MovingChanged
         {
             if (wasMoving)
             {
@@ -153,25 +170,54 @@ public class BasicEnemyMovement : MonoBehaviour
             }
         }
 
+        //If moving right, set rotation to Quat.Euler's Vec3's 0; set facing right to true
         if (moveDir.x > 0)
         {
             transform.rotation = Quaternion.Euler(Vector3.zero);
             facingRight = true;
         }
+        //If moving left, set rotation to Quat.Euler's 180y; set facing right to false
         else if (moveDir.x < 0)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
             facingRight = false;
         }
 
+        //If I can move in moveDirection, do various movement. Else, turn around by inverting facingRight. 
         if (CanMove(moveDir))
         {
+            //Turn around
+            if (canTurnOnEdge && grounded && onEdge)
+            {
+                /*if (CanMove(moveDir) && grounded && onEdge)
+                {*/
+                    //Move in opposite direction as long as onEdge is true.
+                    //To try:
+                    /*
+                     * x Change forcemode2d to force
+                     * x move facing right def below addforce
+                     * x add multiplier to movedir
+                     * x Add '-' back to moveDir 
+                     * x Move this code into CanMove encapsulation inside UpdateMovement
+                     * Add more similar code from CheckGrounded after debug.drawray
+                     * x Set moveDir x to -moveDir x
+                     * x Multiply moveDir by facingRight in AddForce after update
+                     * Call EdgeCheck
+                     * Set onEdge to false after
+                     */
+
+                //myBody.AddForce(moveDir, ForceMode2D.Impulse);
+                facingRight = !facingRight;
+                moveDir = -moveDir;
+                Debug.Log("Edge found. Moving in opposite direction.");
+                CheckEdge();
+                //}
+            }
             if (isOnSlope)
             {
                 //Vector2 moveSlope = new Vector2(Mathf.Abs(slopeHitAngle.x), Mathf.Abs(slopeHitAngle.y));
                 if (canWalkOnSlope)
-                {
-                    
+                {                    
                     myBody.AddForce(slopeHitAngle * (facingRight ? moveDir.x : -moveDir.x), ForceMode2D.Impulse);
                 }
             }
@@ -179,6 +225,21 @@ public class BasicEnemyMovement : MonoBehaviour
             {
                 myBody.AddForce(moveDir, ForceMode2D.Impulse);
             }
+
+            //Turn around
+            //if (canTurnOnEdge)
+            //{
+            //    if (CanMove(moveDir) && grounded && onEdge)
+            //    {
+                    //Move in opposite direction as long as onEdge is true.
+
+
+            //        myBody.AddForce(moveDir, ForceMode2D.Impulse);
+            //        facingRight = !facingRight;
+            //        Debug.Log("Edge found. Moving in opposite direction.");
+            
+            //    }
+            //} 
         }
         else{
             facingRight = !facingRight;
@@ -211,6 +272,14 @@ public class BasicEnemyMovement : MonoBehaviour
         {
             myBody.linearVelocity = new Vector3(myBody.linearVelocity.x, verticalVelocityMax.y);
         }
+
+        //If enemy hits a wall or the edge, 
+        //Check for ground
+        //CheckGrounded for wall
+
+        //Check if turn on edge is true.
+
+        
     }
     
     void UpdateAnimation()
@@ -296,7 +365,7 @@ public class BasicEnemyMovement : MonoBehaviour
     #endregion
 
     #region Slope
-    private void SlopeCheck()
+    private void CheckSlope()
     {
         Vector2 checkPos = transform.position - (Vector3)(new Vector2(0.0f, myCollider.size.y / 2));
 
@@ -356,17 +425,25 @@ public class BasicEnemyMovement : MonoBehaviour
     //return true if we are NOT moving into a wall
     bool CanMove(Vector2 moveDir)
     {
-        SlopeCheck();
+        CheckSlope();
 
         bool canMove = Physics2D.Raycast(transform.position, moveDir.x > 0 ? Vector3.right : Vector3.left, wallDistanceCheck, collisionMask).collider == null;
         Debug.DrawRay(transform.position, (moveDir.x > 0 ? Vector3.right : Vector3.left) * wallDistanceCheck, canMove ? Color.green : Color.red);
         return canMove;
     }
 
+    void CheckEdge()
+    {        
+        //onEdge = Physics2D.CircleCast(edgeDetector.position, groundRadiusCheck, Vector3.down, groundedDistance, collisionMask).collider == null;
+        onEdge = Physics2D.Raycast(edgeDetector.position, Vector3.down, groundedDistance, collisionMask).collider == null;
+        Debug.DrawRay(edgeDetector.position, Vector3.down * groundedDistance, onEdge ? Color.green : Color.red);
+    }
+
     //return true if an object is under us
     void CheckGrounded()
     {
         grounded = Physics2D.CircleCast(transform.position, groundRadiusCheck, Vector3.down, groundedDistance, collisionMask).collider != null;
+
         Debug.DrawRay(transform.position, Vector3.down * groundedDistance, grounded ? Color.green : Color.red);
 
         if (isOnSlope & !canWalkOnSlope)
