@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,15 @@ public class EnemyBase : Grabbable
     public delegate void PickUpCallback();
     public event PickUpCallback onPickup;
 
+    public delegate void EnemyPickedUp(bool _b);
+    public event EnemyPickedUp onEnemyPickedUp;
+
+    PlayerLevelStats p;
+    //public event EventHandler EnemyPickedUp;
+    
     BasicEnemyMovement basicEnemyMovement;
+    
+    
     public override void PickUp()
     {
         base.PickUp();
@@ -27,8 +36,12 @@ public class EnemyBase : Grabbable
         {
             
         }
-        StartCoroutine(RemoveAfterTime());
+        //StartCoroutine(RemoveAfterTime());
+    }
 
+    private void Awake()
+    {
+        
     }
 
     IEnumerator RemoveAfterTime()
@@ -48,4 +61,12 @@ public class EnemyBase : Grabbable
         Destroy(gameObject);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.GetComponent<PlayerHealth>())
+        {
+            var ph = collision.gameObject.GetComponent<PlayerHealth>();
+            MyEventsManager.OnPlayerDamaged();
+        }
+    }
 }

@@ -328,7 +328,8 @@ public class EnemyController : MonoBehaviour
 
                 //transform.Rotate(Vector3.up);
                 //myRB.velocity.Set(0, 0);
-                myRB.isKinematic = true;
+                //myRB.isKinematic = true; //deprecated in Unity 6
+                myRB.bodyType = RigidbodyType2D.Kinematic;
                 myRB.Sleep();
                 StartRecover();
             }

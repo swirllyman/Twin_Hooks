@@ -18,7 +18,6 @@ public class BasicEnemyMovement : MonoBehaviour
     [SerializeField] bool canTurnOnEdge;
     [SerializeField] Transform edgeDetector;
 
-
     [Header("Jumping")]
     [SerializeField] float initialJumpForce = 2.5f;
     [SerializeField] float sustainedJumpForce = .5f;
@@ -81,7 +80,7 @@ public class BasicEnemyMovement : MonoBehaviour
         EnemyBase e = GetComponent<EnemyBase>();
         if(e != null)
         {
-            e.onPickup += PauseMovement;
+            e.onEnemyPickedUp += PauseMovement;
         }
 
         if (canTurnOnEdge && edgeDetector != null)

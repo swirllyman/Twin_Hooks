@@ -94,6 +94,7 @@ public class AutoMoveSimple : MonoBehaviour
         Vector3 transformHolder = groundDetection.transform.localPosition;
         transformHolder.x *= -1;
         groundDetection.transform.localPosition = transformHolder;
+        Debug.DrawLine(groundDetection.position, (Vector3.down * groundRaycastDistance) + groundDetection.position);
     }
 
     void Update()

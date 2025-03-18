@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(PlatformerCharacter2D_Alt))]
 public class PlayerHealth : MonoBehaviour
 {
-    //public int health = 5; //NOT USED. The real one is in GameManager
+    public int health = 5; //NOT USED. The real one is in GameManager
     [SerializeField] bool isInvincible = false;
     [SerializeField] bool m_InvincibleCheat = false;
     public float invincibleTimeLimit = 1.0f, invincibleTimer = 0f;
@@ -37,7 +37,7 @@ public class PlayerHealth : MonoBehaviour
         isInvincible = false;
         if(!myAudio)
             myAudio = GetComponent<AudioSource>();
-        gm = GameObject.FindObjectOfType<GameManager>();
+        gm = GameObject.FindFirstObjectByType<GameManager>();
         col = spriteRend.color;
         var a = spriteRend.color.a;
         childSprites =  GetComponentsInChildren<SpriteRenderer>();
