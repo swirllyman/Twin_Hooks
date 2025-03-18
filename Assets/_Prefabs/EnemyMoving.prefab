@@ -175,15 +175,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
-  forwardRaycastDistance: 2
-  groundRaycastDistance: 2
+  forwardRaycastDistance: 0.05
+  groundRaycastDistance: 1
   isMoving: 1
   movingRight: 1
   isPatrolling: 1
   groundDetection: {fileID: 531668536}
   layerMasks:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 896
   m_EnemySprite: {fileID: 6743758614512949642}
   forwardDirection: {x: 1, y: 0}
 --- !u!1 &7286024143984561061 stripped
