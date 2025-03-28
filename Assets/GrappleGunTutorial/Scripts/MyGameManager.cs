@@ -129,6 +129,8 @@ public class MyGameManager : MonoBehaviour
     {
         m_gm = new MyGameManager();
         health = maxHealth;
+        maxHP = health;
+        currHP = health;
         healthText.text = "Health: " + GetHealth();
         MyEventsManager.onFinish += StopUpdates;
         if (SceneManager.GetActiveScene().name == "Level Results")
@@ -195,7 +197,7 @@ public class MyGameManager : MonoBehaviour
     
     public int GetMyHealth()
     {
-        return health;
+        return currHP;
     }
 
     void SaveLevelResults()
