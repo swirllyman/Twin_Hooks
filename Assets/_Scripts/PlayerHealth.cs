@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets._2D;
 using UnityEngine.SceneManagement;
+using TMPro;
 //using Unity.Transforms;
 
 [RequireComponent(typeof(PlatformerCharacter2D_Alt))]
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 5; //NOT USED. The real one is in GameManager
+    //public int health = 5; //NOT USED. The real one is in GameManager
     [SerializeField] bool isInvincible = false;
     [SerializeField] bool m_InvincibleCheat = false;
     public float invincibleTimeLimit = 1.0f, invincibleTimer = 0f;
-    
+    public TextMeshProUGUI m_healthText;
+    public MyGameManager m_gm;
     PlatformerCharacter2D_Alt playerPlatformChar;
     [SerializeField] SpriteRenderer spriteRend;
     SpriteRenderer [] childSprites;
@@ -24,7 +26,6 @@ public class PlayerHealth : MonoBehaviour
     public AudioClip damage;
     public AudioClip death;
     public AudioClip revive;
-
 
     GameManager gm;
 
@@ -68,17 +69,22 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isInvincible)
             return;
-        m_DamageParticles.Play();
         BumpPlayer();
-        myAudio.Stop();
-        myAudio.PlayOneShot(damage); 
-        MyGameManager.ChangeHealth(-1);
-        //if (spriteRend)
+        //Damage FX - NOTE: if any values are null, the rest of the method doesn't work!
+        //Comment or add values before running!
+        
+        //m_DamageParticles.Play();
+        //myAudio.Stop();
+        //myAudio.PlayOneShot(damage);
+        Debug.Log("I'm hit! Changing Health");
+
+        m_gm.ChangeMyHealth(-1);
+        /*if (spriteRend)
         //{
 
         //    col.a = 0.2f;
         //    spriteRend.color = col;            
-        //}
+        //}*/
         ChangeColorOnAllSprites(true);
     }
 
@@ -90,7 +96,7 @@ public class PlayerHealth : MonoBehaviour
         myAudio.Stop();
         myAudio.PlayOneShot(damage); 
         MyGameManager.ChangeHealth(-_d);
-        //if (spriteRend)
+        /*if (spriteRend)
         //{           
         //    col.a = 0.2f;
         //    spriteRend.color = col;
@@ -98,13 +104,13 @@ public class PlayerHealth : MonoBehaviour
         //    {
         //        childSprites[i].color = col;
         //    }
-        //}
+        //}*/
         ChangeColorOnAllSprites(true);
     }
 
     void HealthCheck()
     {
-        if (MyGameManager.GetHealth() > 0)
+        if (m_gm.GetMyHealth() > 0)
         {
             StartCoroutine("BecomeTemporarilyInvincible");
             return;
@@ -123,8 +129,8 @@ public class PlayerHealth : MonoBehaviour
 
     void KillPlayer()
     {
-        myAudio.Stop();
-        myAudio.PlayOneShot(death);
+        //myAudio.Stop();
+        //myAudio.PlayOneShot(death);
         if (GetComponent<PlatformerCharacter2D_Alt>() != null)
         {
             GetComponent<PlatformerCharacter2D_Alt>().enabled = false;

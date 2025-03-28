@@ -242,14 +242,14 @@ public class PlayerMovement : MonoBehaviour
     #region Jumping
     void CheckJump()
     {
-        if (grounded & !justJumped)
+        if (/*grounded &&*/ !justJumped)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (grabber != null && grabber.attachedGrabbable != null)
                     KickJump();
-                //else
-                //    Jump();
+                else
+                    Jump();
             }
         }
     }

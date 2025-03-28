@@ -104,7 +104,7 @@ public class AutoMoveSimple : MonoBehaviour
             //Move
             //transform.Translate(Vector2.right * moveSpeed * Time.deltaTime); // Only move by time.deltatime if you're using Translate
             myRB.linearVelocity = moveSpeed * forwardDirection;
-            Debug.Log("Moving right is: " + movingRight);
+            //Debug.Log("Moving right is: " + movingRight);
             if(isPatrolling)
             {
                 //Cast a ray down to detect ground ahead
@@ -120,16 +120,16 @@ public class AutoMoveSimple : MonoBehaviour
                 RaycastHit2D collidingWithSide = Physics2D.Raycast(halfWidth, forwardDirection  /** (-myRB.velocity/myRB.velocity)*/, forwardRaycastDistance/2, layerMasks);
                 
                 var leftPerpPos = halfWidth + forwardDirection * forwardRaycastDistance/2;
-                Debug.Log("Enemy Forward Direction " + forwardDirection);
+                //Debug.Log("Enemy Forward Direction " + forwardDirection);
                 Debug.DrawRay(halfWidth, forwardDirection/*transform.right * (-myRB.velocity / myRB.velocity)*/,/*transform.right * (raycastDistance/2)*/ Color.red);
                 //Debug.DrawLine(transform.position, leftPerpPos, Color.red);
                 if (collidingWithSide)
                 {
-                    Debug.Log("Enemy Forward Direction Before" + forwardDirection);
+                    //Debug.Log("Enemy Forward Direction Before" + forwardDirection);
 
-                    Debug.Log(gameObject.name + " found side: " + collidingWithSide.collider.name + "\nTurning around"  );
+                    //Debug.Log(gameObject.name + " found side: " + collidingWithSide.collider.name + "\nTurning around"  );
                     TurnAround();
-                    Debug.Log("Enemy Forward Direction After" + forwardDirection);
+                    //Debug.Log("Enemy Forward Direction After" + forwardDirection);
 
                 }
 

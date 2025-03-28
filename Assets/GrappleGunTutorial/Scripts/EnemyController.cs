@@ -240,8 +240,8 @@ public class EnemyController : MonoBehaviour
         // Damage Player on collision if my state is Normal or Grappled
         else if (collision.gameObject.CompareTag("Player"))
         {
-            if ((myEnemyState == EnemyState.Normal || myEnemyState == EnemyState.Grappled) &&
-                hurtsPlayer && collision.gameObject.GetComponent<PlayerHealth>().GetInvincibleState() == false)
+            if ((myEnemyState == EnemyState.Normal /*|| myEnemyState == EnemyState.Grappled*/) &&
+                hurtsPlayer /*&& collision.gameObject.GetComponent<PlayerHealth>().GetInvincibleState() == false*/)
             { MyEventsManager.OnPlayerDamaged(); }
 
             //else if (myEnemyState == EnemyState.Pulled)

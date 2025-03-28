@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 //[System.Serializable]
 //public class ScoreIntEvent : UnityEvent<int>
@@ -44,7 +45,6 @@ public class MyEventsManager : MonoBehaviour
     {
         onPlayerDamaged.Invoke();
     }
-
 }
 
 public enum EnemyState
@@ -72,6 +72,8 @@ public class MyGameManager : MonoBehaviour
     public static int levelScore = 0;
     public static int health = 0;
     public static int maxHealth = 5;
+    public int currHP = 0;
+    public int maxHP = 5;
     public int coinsInLevel = 0;
     public int coins = 0;
     public static float levelTime = 0; 
@@ -93,15 +95,15 @@ public class MyGameManager : MonoBehaviour
                      int rankBonus = 100000;
     //goalTime - levelTime
     [Header("Text for Level & Player Values")]
-    public Text coinsText;
-       public Text scoreText;
-       public Text timeText;
-       public Text healthText;
-       public Text ratingText;
+    public TextMeshProUGUI coinsText,
+    scoreText,
+    timeText,
+    healthText,
+    ratingText;
 
     string RatingString;
     GameObject coinToTrack;
-    public Text coinsTextGoal,
+    public TextMeshProUGUI coinsTextGoal,
                 scoreTextGoal,
                 timeTextGoal,
                 healthTextGoal,
@@ -121,9 +123,13 @@ public class MyGameManager : MonoBehaviour
     private int minutes;
     private int hours;
 
+    static MyGameManager m_gm;
+
     void Start()
     {
+        m_gm = new MyGameManager();
         health = maxHealth;
+        healthText.text = "Health: " + GetHealth();
         MyEventsManager.onFinish += StopUpdates;
         if (SceneManager.GetActiveScene().name == "Level Results")
         {
@@ -163,12 +169,31 @@ public class MyGameManager : MonoBehaviour
         MyEventsManager.ScorePoints(coinScoreValue);
     }
 
+    public static TextMeshProUGUI GetHealthText()
+    { 
+        return m_gm.healthText;
+    }
+
     // Health functions
     public static void ChangeHealth(int _h)
     {
         health += _h; //the vars in a static function must also be static
+        m_gm.healthText.text = "Health: " + GetHealth();
+        print("Health is now " + m_gm.healthText.text);
+    }
+    
+    public void ChangeMyHealth(int _h)
+    {
+        currHP += _h; //the vars in a static function must also be static
+        healthText.text = "Health: " + currHP;
+        print("Health is now " + healthText.text);
     }
     public static int GetHealth()
+    {
+        return health;
+    }
+    
+    public int GetMyHealth()
     {
         return health;
     }
