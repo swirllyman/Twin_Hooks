@@ -17,7 +17,7 @@ public class Aimer2D : MonoBehaviour
 
     private void Start()
     {
-        //playerCameraFollow.transform.parent = null;
+        playerCameraFollow.transform.parent = null;
     }
 
     public Vector3 GetAimDirection()
