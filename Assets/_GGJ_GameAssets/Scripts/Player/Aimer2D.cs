@@ -28,6 +28,8 @@ public class Aimer2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //3/31 - PlayerCam/Cinemachine Camera's follow mode is overriding the lookAtObject's position.
         aimDirection = Vector3.zero;
         float aimAngle = 0;
         var worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
