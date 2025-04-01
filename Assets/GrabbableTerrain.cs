@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GrabbableTerrain : MonoBehaviour
 {
-    [SerializeField] protected SpriteRenderer myRend;
+    //[SerializeField] protected SpriteRenderer myRend;
+    [SerializeField] protected TilemapRenderer myRend;
     [SerializeField] protected AudioSource audioSource;
     [SerializeField] Color flashColor;
     [SerializeField] float flashTime = 1.0f;
@@ -21,7 +23,7 @@ public class GrabbableTerrain : MonoBehaviour
     {
         myBody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<Collider2D>();
-        myRend = GetComponent<SpriteRenderer>();
+        myRend = GetComponent<TilemapRenderer>();
         //startColor = myRend.color;
         //LeanTween.color(myRend.gameObject, flashColor, flashTime).setLoopPingPong().setEase(tweenType);
     }

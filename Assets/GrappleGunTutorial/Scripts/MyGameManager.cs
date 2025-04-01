@@ -304,10 +304,14 @@ public class MyGameManager : MonoBehaviour
             //levelTime += Time.deltaTime;
 
             //timeText.text = "Time: " + levelTime;
-            StopwatchCalc();
-            scoreText.text = "Score : " + levelScore;
-            coinsText.text = "Coins: " + coins;
-            healthText.text = "Health: " + health;
+            if(timeText != null)
+                StopwatchCalc();
+            if(scoreText != null)
+                scoreText.text = "Score : " + levelScore;
+            if(coinsText != null)
+                coinsText.text = "Coins: " + coins;
+            if(healthText != null) 
+                healthText  .text = "Health: " + health;
         }
 
         if (SceneManager.GetActiveScene().name == "Level Results")
