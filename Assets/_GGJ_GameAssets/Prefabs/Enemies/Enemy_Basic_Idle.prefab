@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1430144772514594621}
   - component: {fileID: 1451126536776820410}
   - component: {fileID: 2729909961284005105}
+  - component: {fileID: 1083064853451823477}
+  - component: {fileID: 8124492695861288229}
   - component: {fileID: 4655905521259717278}
   m_Layer: 7
   m_Name: Enemy_Basic_Idle
@@ -291,6 +293,57 @@ MonoBehaviour:
   hitGroundClip: {fileID: 0}
   minSoundHitSpeed: 0.01
   minSoundCD: 0.1
+--- !u!114 &1083064853451823477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4321022703923035154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75ffe48289c4f5049b59d112020182e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tempAudioPrefab: {fileID: 0}
+  hp: 2
+  damageToPlayer: 1
+  hurtsPlayer: 1
+  hurtsEnemy: 0
+  defaultInvincibleTimer: 0.5
+  carriedObject: {fileID: 0}
+  myEnemyState: 0
+  m_DamageParticles: {fileID: 0}
+  m_NormalHeadObj: {fileID: 0}
+  m_DeadHeadObj: {fileID: 0}
+  a_TakeDamage: {fileID: 0}
+  a_death: {fileID: 0}
+  a_thrownCollide: {fileID: 0}
+  a_unStunned: {fileID: 0}
+--- !u!114 &8124492695861288229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4321022703923035154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f1e83c7e74ced42b6bba320642c42f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0
+  forwardRaycastDistance: 2
+  groundRaycastDistance: 2
+  isMoving: 1
+  movingRight: 1
+  isPatrolling: 0
+  groundDetection: {fileID: 0}
+  layerMasks:
+    serializedVersion: 2
+    m_Bits: 0
+  m_EnemySprite: {fileID: 0}
+  forwardDirection: {x: 1, y: 0}
 --- !u!114 &4655905521259717278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +360,8 @@ MonoBehaviour:
   moveSpeedAir: 0.05
   maxVelocity: 2
   wallDistanceCheck: 0.08
+  forwardRaycastDistance: 2
+  groundRaycastDistance: 2
   verticalVelocityMax: {x: 5, y: 3}
   runClip: {fileID: 0}
   canTurnOnEdge: 0

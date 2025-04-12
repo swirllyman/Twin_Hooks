@@ -92,7 +92,7 @@ public class AutoMoveSimple : MonoBehaviour
             //transform.eulerAngles = new Vector3(0, -180, 0); 
             //possibly change below to a 
             boxExtents = -boxExtents;
-            m_EnemySprite.flipX = !movingRight;
+            //m_EnemySprite.flipX = movingRight;
             forwardDirection = Vector2.left;
             movingRight = false;
         }
@@ -100,11 +100,12 @@ public class AutoMoveSimple : MonoBehaviour
         {
             //transform.eulerAngles = new Vector3(0, 0, 0);
             boxExtents = -boxExtents;
-            m_EnemySprite.flipX = movingRight;
+            //m_EnemySprite.flipX = !movingRight;
             forwardDirection = Vector2.right;
             movingRight = true;
             //groundDetection.transform.Translate(new Vector2(groundDetection.transform.position.x, groundDetection.transform.position.y));
         }
+        m_EnemySprite.flipX = movingRight;
         InvertGroundXPosition();
     }
 
