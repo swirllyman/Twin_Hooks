@@ -19,6 +19,22 @@ public class AutoMoveSimple : MonoBehaviour
 
     EnemyController enemyController;
     float defaultMoveSpeed, halfMoveSpeed;
+    internal bool pauseMovement = false;
+
+    Vector3 startPosition;
+    Vector2 slopeNormalPerp;
+    Vector2 movePos;
+    Vector2 moveDir;
+    Vector2 slopeHitAngle;
+    internal void PauseMovement(bool pause)
+    {
+        pauseMovement = pause;
+        if (pause)
+        {
+            movePos = Vector2.zero;
+        }
+    }
+
     public void GetEnemyStateAndToggleMove()
     {
         if (enemyController.GetState() != EnemyState.Normal)
@@ -43,6 +59,13 @@ public class AutoMoveSimple : MonoBehaviour
     private void Awake()
     {
         enemyController = GetComponent<EnemyController>();
+        
+        EnemyBase e = GetComponent<EnemyBase>();
+        if (e != null)
+        {
+            e.onEnemyPickedUp += PauseMovement;
+        }
+
         boxExtents = m_EnemySprite.bounds.extents.x;
         if(!movingRight)
         {

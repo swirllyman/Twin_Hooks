@@ -13,6 +13,8 @@ public class BasicEnemyMovement : MonoBehaviour
     [SerializeField] float moveSpeedAir = .35f;
     [SerializeField] float maxVelocity = 1;
     [SerializeField] float wallDistanceCheck = .08f;
+    [SerializeField] float forwardRaycastDistance = 2f;
+    [SerializeField] float groundRaycastDistance = 2f;
     [SerializeField] Vector2 verticalVelocityMax = new Vector2(3, 3);
     [SerializeField] AudioClip runClip;
     [SerializeField] bool canTurnOnEdge;
@@ -105,7 +107,7 @@ public class BasicEnemyMovement : MonoBehaviour
         if (!pauseMovement)
         {
             CheckMovementDirection();
-            CheckJump();
+            //CheckJump();
         }
         CheckReset();
         //UpdateAnimation();
@@ -240,9 +242,10 @@ public class BasicEnemyMovement : MonoBehaviour
             //    }
             //} 
         }
-        else{
-            facingRight = !facingRight;
-        }
+        //else{
+        //    facingRight = !facingRight;
+        //}
+
         //if (moveDir.x > 0)
         //{
         //    transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -434,8 +437,8 @@ public class BasicEnemyMovement : MonoBehaviour
     void CheckEdge()
     {        
         //onEdge = Physics2D.CircleCast(edgeDetector.position, groundRadiusCheck, Vector3.down, groundedDistance, collisionMask).collider == null;
-        onEdge = Physics2D.Raycast(edgeDetector.position, Vector3.down, groundedDistance, collisionMask).collider == null;
-        Debug.DrawRay(edgeDetector.position, Vector3.down * groundedDistance, onEdge ? Color.green : Color.red);
+        onEdge = Physics2D.Raycast(edgeDetector.position, Vector3.down, groundRaycastDistance, collisionMask).collider == null;
+        Debug.DrawRay(edgeDetector.position, Vector3.down * groundRaycastDistance, onEdge ? Color.green : Color.red);
     }
 
     //return true if an object is under us
@@ -473,5 +476,16 @@ public class BasicEnemyMovement : MonoBehaviour
                 audioSource.PlayOneShot(landingClip);
             }
         }
+    }
+
+    void InvertGroundXPosition()
+    {
+        edgeDetector.transform.position.Set(-edgeDetector.transform.position.x, edgeDetector.transform.position.y, edgeDetector.transform.position.z);
+        //FIXED To turn around edgeDetector object. The easiest way to change x in the local position is to 
+        //create a transformHolder Vector3, give it the localPosition value and change its x, then re-assign localPosition to the transformHolder.
+        Vector3 transformHolder = edgeDetector.transform.localPosition;
+        transformHolder.x *= -1;
+        edgeDetector.transform.localPosition = transformHolder;
+        Debug.DrawLine(edgeDetector.position, (Vector3.down * groundRaycastDistance) + edgeDetector.position);
     }
 }
