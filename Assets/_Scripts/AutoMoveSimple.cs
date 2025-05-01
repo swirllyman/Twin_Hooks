@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(EnemyController))]
 public class AutoMoveSimple : MonoBehaviour
 {
