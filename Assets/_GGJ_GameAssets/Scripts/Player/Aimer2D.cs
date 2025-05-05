@@ -34,6 +34,7 @@ public class Aimer2D : MonoBehaviour
         float aimAngle = 0;
         var worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
         mouseDistance = Vector2.Distance(worldMousePosition, transform.position);
+
         var facingDirection = worldMousePosition - transform.position;
         aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
         if (aimAngle < 0f)
@@ -42,6 +43,7 @@ public class Aimer2D : MonoBehaviour
         }
 
         aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
+        
         SetCrosshairPosition(aimAngle);
         playerCameraFollow.transform.position = transform.position;
         lookAtObject.localPosition = Vector3.Lerp(lookAtObject.localPosition, aimDirection * cameraOffsetDistance, Time.deltaTime * camTargetSpeed);

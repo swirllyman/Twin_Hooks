@@ -66,6 +66,10 @@ public class BasicEnemyMovement : MonoBehaviour
 
     internal bool pauseMovement = false;
 
+    //Event that emits when movement direction changes
+    public delegate void MovementDirectionChanged();
+    public event MovementDirectionChanged onMovementDirectionChanged;
+
 
     internal void PauseMovement(bool pause)
     {
@@ -132,7 +136,7 @@ public class BasicEnemyMovement : MonoBehaviour
     }
     #endregion
 
-    void MovingChanged()
+    void MovingToggled()
     {
         wasMoving = !wasMoving;
 
@@ -150,6 +154,17 @@ public class BasicEnemyMovement : MonoBehaviour
         }
     }
 
+    public Vector2 GetDirectionVector2D(float angle)
+    {
+        return moveDir;
+        //return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
+    }
+
+    public Vector2 GetDirection()
+    {
+        return moveDir;
+    }
+
     void UpdateMovement()
     {
         //moveDir is now Get vector2 with x = movePos.x times moveSpeedGround if grounded or times moveSpeedAir if not grounded; y = 0
@@ -160,14 +175,14 @@ public class BasicEnemyMovement : MonoBehaviour
         {
             if (!wasMoving)
             {
-                MovingChanged();
+                MovingToggled();
             }
         }
         else //if not and was moving, call MovingChanged
         {
             if (wasMoving)
             {
-                MovingChanged();
+                MovingToggled();
             }
         }
 
@@ -212,6 +227,7 @@ public class BasicEnemyMovement : MonoBehaviour
                 moveDir = -moveDir;
                 Debug.Log("Edge found. Moving in opposite direction.");
                 CheckEdge();
+                onMovementDirectionChanged?.Invoke();
                 //}
             }
             if (isOnSlope)
@@ -418,10 +434,10 @@ public class BasicEnemyMovement : MonoBehaviour
         }
     }
 
-    Vector3 GetDirectionVector2D(float angle)
-    {
-        return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
-    }
+    //Vector3 GetDirectionVector2D(float angle)
+    //{
+    //    return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)).normalized;
+    //}
     #endregion
 
     //return true if we are NOT moving into a wall

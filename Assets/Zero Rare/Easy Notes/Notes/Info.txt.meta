@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 383af128ff055d841a45a396e42ef58c
+timeCreated: 1515202379
+licenseType: Store
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 108293
+  packageName: Easy Notes
+  packageVersion: 1.1.3
+  assetPath: Assets/Zero Rare/Easy Notes/Notes/Info.txt
+  uploadId: 279915

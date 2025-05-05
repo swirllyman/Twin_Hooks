@@ -29,6 +29,10 @@ public class AutoMoveSimple : MonoBehaviour
     Vector2 movePos;
     Vector2 moveDir;
     Vector2 slopeHitAngle;
+
+    public delegate void AutoMoveDirectionChanged();
+    public event AutoMoveDirectionChanged onAutoMoveDirChanged;
+
     internal void PauseMovement(bool pause)
     {
         pauseMovement = pause;
@@ -57,6 +61,11 @@ public class AutoMoveSimple : MonoBehaviour
             moveSpeed = halfMoveSpeed;
         else
             moveSpeed = defaultMoveSpeed;
+    }
+
+    public Vector2 GetMoveDirection()
+    {
+        return forwardDirection;
     }
 
     private void Awake()
@@ -109,6 +118,7 @@ public class AutoMoveSimple : MonoBehaviour
             //groundDetection.transform.Translate(new Vector2(groundDetection.transform.position.x, groundDetection.transform.position.y));
         }
         m_EnemySprite.flipX = movingRight;
+        onAutoMoveDirChanged?.Invoke();
         InvertGroundXPosition();
     }
 

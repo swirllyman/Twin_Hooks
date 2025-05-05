@@ -23,8 +23,8 @@ public class EnemyBullet : MonoBehaviour
             {
                 MyEventsManager.OnPlayerDamaged();
                 doesDamage = false;
+                GetComponent<Rigidbody2D>().gravityScale = 10;
             }
-            GetComponent<Rigidbody2D>().gravityScale = 10;
         }
         else if(hurtsEnemies && collision.gameObject.CompareTag("Enemy"))
         {
