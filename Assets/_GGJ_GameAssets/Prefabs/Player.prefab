@@ -1166,12 +1166,16 @@ MonoBehaviour:
   noFriction: {fileID: 6200000, guid: 2852c85c0a9e27b47901222e57bd2b30, type: 2}
   fullFriction: {fileID: 6200000, guid: d21fa6e7beb8f984abf1111fc3a350f5, type: 2}
   myAnim: {fileID: 4456561205447448201}
+  initialLaunchForce: 15
+  sustainedLaunchForce: 15
   collisionMask:
     serializedVersion: 2
-    m_Bits: 51
+    m_Bits: 2355
   resetDistance: 60
   grabber: {fileID: 936399169}
   aimer: {fileID: 2975590258447237518}
+  justKickJumped: 0
+  justLaunched: 0
 --- !u!114 &936399164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1239,6 +1243,8 @@ MonoBehaviour:
   throwClip: {fileID: 8300000, guid: 2ba4ed8000ca3b14c98fd5ee542feb29, type: 3}
   m_TileMap: {fileID: 0}
   m_StaticTileMap: {fileID: 0}
+  m_Movement: {fileID: 0}
+  grabbableTerrainPrefab: {fileID: 0}
 --- !u!114 &2975590258447237518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1365,6 +1371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2737abdb00388f04e96ff7906a242dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHealth: 5
 --- !u!1 &8984317170972158566
 GameObject:
   m_ObjectHideFlags: 0
