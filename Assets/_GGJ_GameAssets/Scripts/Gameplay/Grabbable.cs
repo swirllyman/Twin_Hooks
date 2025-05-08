@@ -46,6 +46,8 @@ public class Grabbable : MonoBehaviour
 
     public virtual void Drop()
     {
+        LeanTween.cancel(myRend.gameObject);
+        myRend.color = startColor;
         myCollider.enabled = true;
         myBody.bodyType = RigidbodyType2D.Dynamic;
         Debug.Log("Dropped");

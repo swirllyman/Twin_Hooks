@@ -639,6 +639,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Basic_Idle_FixedShot Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8124492695861288229, guid: 8f00b00fbd0c7874aa4be189b3790ae2, type: 3}
+      propertyPath: m_EnemySprite
+      value: 
+      objectReference: {fileID: 3065611992389937164}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -653,6 +657,11 @@ PrefabInstance:
 --- !u!4 &433127062887093159 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2452449755703833057, guid: 8f00b00fbd0c7874aa4be189b3790ae2, type: 3}
+  m_PrefabInstance: {fileID: 2596919797426299462}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &3065611992389937164 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1045152969354529354, guid: 8f00b00fbd0c7874aa4be189b3790ae2, type: 3}
   m_PrefabInstance: {fileID: 2596919797426299462}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3408643922177145386
