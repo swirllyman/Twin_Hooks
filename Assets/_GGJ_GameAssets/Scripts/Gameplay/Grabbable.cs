@@ -22,7 +22,10 @@ public class Grabbable : MonoBehaviour
     {
         myBody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<Collider2D>();
-        myRend = GetComponent<SpriteRenderer>();
+        if(myRend == null)
+        {
+            myRend = GetComponentInChildren<SpriteRenderer>();
+        }
         startColor = myRend.color;
         LeanTween.color(myRend.gameObject, flashColor, flashTime).setLoopPingPong().setEase(tweenType);
     }
