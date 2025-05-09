@@ -85,7 +85,8 @@ public class PlayerGrabber : MonoBehaviour
             lineRend.SetPosition(1, grabberTip.position);
             if ((Vector3.Distance(grabberTip.position, hit.point) < shotDistanceCheck) /*&& (hit.collider.GetComponent<GrabbableTerrain>() || hit.collider.gameObject.CompareTag("Grabbable"))/**/)
             {
-                if (hit.collider.GetComponent<GrabbableTerrain>() || hit.collider.gameObject.CompareTag("Grabbable"))
+                if (hit.collider != null 
+                    && (hit.collider.GetComponent<GrabbableTerrain>() || hit.collider.gameObject.CompareTag("Grabbable")) )
                     AttachGrabber();
                 else
                     StopShot();
