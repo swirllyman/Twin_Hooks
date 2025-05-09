@@ -568,7 +568,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 887914049875646657}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &1248396435608765525
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040,6 +1040,8 @@ GameObject:
   - component: {fileID: 2975590258447237518}
   - component: {fileID: 3084708829465507996}
   - component: {fileID: 6260554490926526358}
+  - component: {fileID: 939534413909932614}
+  - component: {fileID: 7632449198548893100}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1183,7 +1185,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8820890141109978130}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79a5ad48879cbc546ab93bdbfdab1f05, type: 3}
   m_Name: 
@@ -1231,7 +1233,7 @@ MonoBehaviour:
   shotDistanceCheck: 0.1
   collisionMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 897
   lineRend: {fileID: 4756165028775432029}
   trajectoryRend: {fileID: 7633213233257726742}
   preCastLineRend: {fileID: 511212279}
@@ -1243,8 +1245,8 @@ MonoBehaviour:
   throwClip: {fileID: 8300000, guid: 2ba4ed8000ca3b14c98fd5ee542feb29, type: 3}
   m_TileMap: {fileID: 0}
   m_StaticTileMap: {fileID: 0}
-  m_Movement: {fileID: 0}
-  grabbableTerrainPrefab: {fileID: 0}
+  m_Movement: {fileID: 8820890141109978142}
+  grabbableTerrainPrefab: {fileID: 3701735938890613301, guid: 3f7cce145bdb16f49a70ec4e36e6ee46, type: 3}
 --- !u!114 &2975590258447237518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,7 +1279,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1372,6 +1374,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHealth: 5
+--- !u!114 &939534413909932614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820890141109978130}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08f91df3bd212f429df17f53ce2f364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MaxSpeed: 10
+  m_AirControl: 0
+  m_WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  m_PlayerSprite: {fileID: 0}
+  speed: 1
+  jumpSpeed: 3
+  groundCheck: 0
+  canSwing: 0
+  isSwinging: 0
+  m_LandingParticles: {fileID: 0}
+  ropeHook: {x: 0, y: 0}
+  swingForce: 4
+--- !u!114 &7632449198548893100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820890141109978130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed63717815bef54a9220dca3e492fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInvincible: 0
+  m_InvincibleCheat: 0
+  invincibleTimeLimit: 2
+  invincibleTimer: 0
+  m_healthText: {fileID: 0}
+  m_gm: {fileID: 0}
+  spriteRend: {fileID: 437955306307830892}
+  m_DamageParticles: {fileID: 0}
+  myAudio: {fileID: 3084708829465507996}
+  damage: {fileID: 0}
+  death: {fileID: 0}
+  revive: {fileID: 0}
 --- !u!1 &8984317170972158566
 GameObject:
   m_ObjectHideFlags: 0

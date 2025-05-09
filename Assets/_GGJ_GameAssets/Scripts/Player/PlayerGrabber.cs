@@ -83,9 +83,12 @@ public class PlayerGrabber : MonoBehaviour
             grabberTip.position += moveDir;
             lineRend.SetPosition(0, grabberHandsTransform.position);
             lineRend.SetPosition(1, grabberTip.position);
-            if (Vector3.Distance(grabberTip.position, hit.point) < shotDistanceCheck)
+            if ((Vector3.Distance(grabberTip.position, hit.point) < shotDistanceCheck) /*&& (hit.collider.GetComponent<GrabbableTerrain>() || hit.collider.gameObject.CompareTag("Grabbable"))/**/)
             {
-                AttachGrabber();
+                if (hit.collider.GetComponent<GrabbableTerrain>() || hit.collider.gameObject.CompareTag("Grabbable"))
+                    AttachGrabber();
+                else
+                    StopShot();
             }
         }
 
@@ -137,7 +140,7 @@ public class PlayerGrabber : MonoBehaviour
         if (!justShot)
         {
             hit = Physics2D.Raycast(transform.position, aimer.aimDirection, attachDistance, collisionMask);
-            if (hit.collider != null && hit.collider.CompareTag("Grabbable"))
+            if (hit.collider != null/* && hit.collider.CompareTag("Grabbable")*/)
             {
                 if (!attached)
                 {
