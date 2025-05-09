@@ -213,6 +213,7 @@ public class PlayerGrabber : MonoBehaviour
         }
         else
         {
+            attachedGrabbable.Hold();
             trajectoryRend.enabled = true;
             holding = true;
         }

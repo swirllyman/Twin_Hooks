@@ -13,12 +13,14 @@ public class AutoMoveSimple : MonoBehaviour
     public bool isMoving = true,
                 movingRight = true,
                 isPatrolling = false;
+                
     public Transform groundDetection;
     public LayerMask layerMasks;
     [SerializeField] private SpriteRenderer m_EnemySprite;
     Rigidbody2D myRB;
     public Vector2 forwardDirection = Vector2.right;
     float boxExtents;
+    bool defaultPatrolling;
 
     EnemyController enemyController;
     float defaultMoveSpeed, halfMoveSpeed;
@@ -42,17 +44,35 @@ public class AutoMoveSimple : MonoBehaviour
         }
     }
 
-    public void GetEnemyStateAndToggleMove()
+    public void StopMoving()
     {
         if (enemyController.GetState() != EnemyState.Normal)
             isMoving = false;
-        else
+    }
+
+    public void StartMoving()
+    {
+        if (enemyController.GetState() == EnemyState.Normal)
             isMoving = true;
+        isPatrolling = defaultPatrolling;
+    }
+    public void GetEnemyStateAndToggleMove()
+    {
+        if (enemyController.GetState() != EnemyState.Normal)
+            MoveToggle(true);//isMoving = false;
+        else
+        {
+            isPatrolling = false;
+            MoveToggle(false);
+        }
+        //isMoving = true;
     }
 
     public void MoveToggle(bool _m)
     {
         isMoving = _m;
+        if(isMoving == true && defaultPatrolling)
+            isPatrolling = _m;
     }
 
     public void ChangeMove(bool _c)
@@ -70,12 +90,22 @@ public class AutoMoveSimple : MonoBehaviour
 
     private void Awake()
     {
+        defaultPatrolling = isPatrolling;
         enemyController = GetComponent<EnemyController>();
-        
+        defaultPatrolling = isPatrolling;
+        if (enemyController == null)
+        {
+            Debug.LogError("EnemyController not found on " + gameObject.name);
+        }
+        //else
+        //{
+        //    enemyController.onEnemyStateChanged += GetEnemyStateAndToggleMove;
+        //}
         EnemyBase e = GetComponent<EnemyBase>();
         if (e != null)
         {
-            e.onEnemyPickedUp += PauseMovement;
+            e.onPull += StopMoving;
+            e.onDrop += StartMoving;
         }
 
         boxExtents = m_EnemySprite.bounds.extents.x;

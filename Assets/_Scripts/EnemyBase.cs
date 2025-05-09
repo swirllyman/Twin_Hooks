@@ -9,8 +9,6 @@ public class EnemyBase : Grabbable
     bool pickedUp = false;
     bool damageOnContact = false;
 
-    public delegate void PickUpCallback();
-    public event PickUpCallback onPickup;
 
     public delegate void EnemyPickedUp(bool _b);
     public event EnemyPickedUp onEnemyPickedUp;
@@ -25,7 +23,7 @@ public class EnemyBase : Grabbable
     {
         base.PickUp();
         pickedUp = true;
-        onPickup?.Invoke();
+
         LeanTween.cancel(myRend.gameObject);
         LeanTween.color(myRend.gameObject, startColor, 0.0f);
         audioSource.Play();

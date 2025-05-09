@@ -32,7 +32,14 @@ public class EnemyController : MonoBehaviour
         myEnemyState = EnemyState.Normal;
         invincibleTime = defaultInvincibleTimer;
         myRB = GetComponent<Rigidbody2D>();
-        
+        EnemyBase e = GetComponent<EnemyBase>();
+        if (e != null)
+        {
+            e.onPull += OnGrabberPulled;
+            e.onHold += OnHeldByPlayer;
+            e.onDrop += OnThrownByPlayer;
+            //e.onDrop += OnRecovered;
+        }
         if (m_NormalHeadObj && m_DeadHeadObj)
         {
             m_NormalHeadObj.SetActive(true);
@@ -75,10 +82,13 @@ public class EnemyController : MonoBehaviour
     }
 
     public void SetTagToPhysObj()
-    { gameObject.tag = "PhysObj"; }
+    { gameObject.tag = "PhysObject"; }
 
     public void SetTagToEnemy()
     { gameObject.tag = "Enemy"; }
+
+    public void SetTagToGrabbable()
+    { gameObject.tag = "Grabbable"; }
 
     public void OnGrabberPulled()
     {
@@ -88,10 +98,10 @@ public class EnemyController : MonoBehaviour
         ToggleHurtsPlayer(false);
         hurtsEnemy = true;
         ToggleConstraints(false);
-        if(GetComponent<AutoMoveSimple>())
+        if(GetComponent<AutoMoveSimpleGrabbable>())
         {
-            var autoMove = GetComponent<AutoMoveSimple>();
-            autoMove.GetEnemyStateAndToggleMove();
+            var autoMove = GetComponent<AutoMoveSimpleGrabbable>();
+            autoMove.enabled = false;
         }
         GrabberGunEvents.grabberHoldObjectEvent.AddListener(OnHeldByPlayer);
     }
@@ -110,14 +120,15 @@ public class EnemyController : MonoBehaviour
     public void OnThrownByPlayer()
     {
         SetTagToPhysObj();
-        myEnemyState = EnemyState.Thrown;
+        myEnemyState = EnemyState.Dropped; //Since Throw is called and calls Drop anyway, keep state at Dropped.
         hurtsEnemy = true;
         GrabberGunEvents.grabberThrowObjectEvent.RemoveListener(OnThrownByPlayer);
     }
 
     public void OnRecovered()
     {
-        SetTagToEnemy();
+        //SetTagToEnemy();
+        SetTagToGrabbable();
         ToggleHurtsPlayer(true);
         hurtsEnemy = false;
         ToggleConstraints(true);
@@ -125,6 +136,8 @@ public class EnemyController : MonoBehaviour
         if (GetComponent<AutoMoveSimple>())
         {
             var autoMove = GetComponent<AutoMoveSimple>();
+            autoMove.enabled = true;
+
             if (autoMove.isMoving)
                 autoMove.MoveToggle(false);
         }
@@ -201,7 +214,7 @@ public class EnemyController : MonoBehaviour
         //Disable AutoMove
         if (GetComponent<AutoMoveSimple>() != null)
         {
-            GetComponent<AutoMoveSimple>().enabled = false;
+            GetComponent<AutoMoveSimple>().MoveToggle(false);
         }
 
         Invoke("SetInactiveInvoking", .4f);
@@ -254,9 +267,11 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Environment") && myRB.linearVelocity.magnitude <= 1f
-            && (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Thrown))
+        if ((collision.gameObject.CompareTag("Environment") || collision.gameObject.GetComponent<GrabbableTerrain>()) 
+            && (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Dropped)
+            && myRB.linearVelocity.magnitude <= 1f)
         {
+            //what if object hits a wall/ceiling instead of ground?
             Debug.Log("Invoking Recover");
             Invoke("OnRecovered", 0.7f);
         }
@@ -320,7 +335,7 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Thrown)
+        if (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Dropped)
         {
             if (myRB.linearVelocity.y == 0 && !m_IsTurningUpright)
             {
@@ -334,13 +349,13 @@ public class EnemyController : MonoBehaviour
                 StartRecover();
             }
         }
-        if (m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up)
+        /*if (m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up)
             && myEnemyState == EnemyState.Thrown)
         {
             transform.rotation =
                 Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.up), .5f);
             if (transform.rotation != Quaternion.Euler(transform.up))
             { OnRecovered(); }
-        }
+        }*/
     }
 }

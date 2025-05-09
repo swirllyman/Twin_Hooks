@@ -18,6 +18,14 @@ public class Grabbable : MonoBehaviour
     protected Color startColor;
     internal Rigidbody2D myBody;
 
+    public delegate void PullCallback();
+    public event PullCallback onPull;
+
+    public delegate void HoldCallback();
+    public event HoldCallback onHold;
+
+    public delegate void DropCallback();
+    public event DropCallback onDrop;
     private void Start()
     {
         myBody = GetComponent<Rigidbody2D>();
@@ -41,6 +49,7 @@ public class Grabbable : MonoBehaviour
 
     public virtual void PickUp()
     {
+        onPull?.Invoke();
         myCollider.enabled = false;
         myBody.bodyType = RigidbodyType2D.Kinematic;
         myBody.linearVelocity = Vector2.zero;
@@ -49,6 +58,7 @@ public class Grabbable : MonoBehaviour
 
     public virtual void Drop()
     {
+        onDrop?.Invoke();
         LeanTween.cancel(myRend.gameObject);
         myRend.color = startColor;
         myCollider.enabled = true;
@@ -61,6 +71,14 @@ public class Grabbable : MonoBehaviour
         Drop();
         myBody.AddForce(direction * force, ForceMode2D.Impulse);
         myBody.angularVelocity = -55 * force;
+    }
+
+    public virtual void Hold()
+    {
+        onHold?.Invoke();
+        myBody.bodyType = RigidbodyType2D.Kinematic;
+        myBody.linearVelocity = Vector2.zero;
+        myBody.angularVelocity = 0.0f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

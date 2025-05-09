@@ -182,8 +182,8 @@ namespace UnityStandardAssets._2D
         {
             if (collision.gameObject.CompareTag("Environment"))
             {
-                m_LandingParticles.transform.position = collision.GetContact(0).point;
-                m_LandingParticles.Play(); 
+                //m_LandingParticles.transform.position = collision.GetContact(0).point;
+                //m_LandingParticles.Play(); 
             }
         }
 

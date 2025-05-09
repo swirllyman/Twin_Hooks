@@ -50,11 +50,12 @@ public class MyEventsManager : MonoBehaviour
 public enum EnemyState
 {
     Normal,
-    Damaged,
     Grappled, // Can move and attack, but slowed
     Pulled,  //Can't move or attack, being pulled
     HeldByPlayer, //Can't move or attack
-    Thrown, 
+    Dropped, 
+    Thrown,
+    Damaged,
     Dead
 }
 
