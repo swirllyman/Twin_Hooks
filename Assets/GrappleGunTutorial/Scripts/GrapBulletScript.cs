@@ -54,8 +54,8 @@ public class GrapBulletScript : MonoBehaviour
         //if (fireHookBullet != null)
         //    audioSource.PlayOneShot(fireHookBullet);
         //GrapGunEvents.shootHookEvent.AddListener(AssignGunSource());
-        GrapGunEvents.hookAttachEvent.AddListener(PlaySurfaceStickSound);
-        GrapGunEvents.hookPullTargetToPlayerEvent.AddListener(PlaySurfaceStickSound);
+        GrabberGunEvents.hookAttachEvent.AddListener(PlaySurfaceStickSound);
+        GrabberGunEvents.hookPullTargetToPlayerEvent.AddListener(PlaySurfaceStickSound);
     }
     public void AssignGunSource(GrapGunSystem _grapGun)
     {
@@ -233,7 +233,7 @@ public class GrapBulletScript : MonoBehaviour
 
         if (grapGun.targetObj)
         {
-            GrapGunEvents.hookAttachEvent.Invoke();
+            GrabberGunEvents.hookAttachEvent.Invoke();
             ToggleCollider();
             ToggleSpriteScale(false);
             AnimateSticking();

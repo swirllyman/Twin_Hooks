@@ -16,15 +16,15 @@ public enum GrapGunMode  {
     Idle
 }
 
-public static class GrapGunEvents
+public static class GrabberGunEvents
 {
     public static UnityEvent shootHookEvent = new UnityEvent(),
                              hookAttachEvent = new UnityEvent(),
                              hookDetachEvent = new UnityEvent(),
                              hookPullTargetToPlayerEvent = new UnityEvent(),
                              hookPullPlayerToTargetEvent = new UnityEvent(),
-                             hookHoldObjectEvent = new UnityEvent(),
-                             hookThrowObjectEvent = new UnityEvent();
+                             grabberHoldObjectEvent = new UnityEvent(),
+                             grabberThrowObjectEvent = new UnityEvent();
 }
 
 //public class GrapAttachEvent : UnityEvent<Vector2, GameObject, > { }
@@ -88,10 +88,10 @@ public static class GrapGunEvents
 
     private void Awake()
     {
-        GrapGunEvents.shootHookEvent.AddListener(Shoot);
-        GrapGunEvents.shootHookEvent.AddListener(AnimateGrapGunFire);
-        GrapGunEvents.hookThrowObjectEvent.AddListener(NullTargetObj);
-        GrapGunEvents.hookHoldObjectEvent.AddListener(/*CallPlayerStickToTarget*/CallHold);
+        GrabberGunEvents.shootHookEvent.AddListener(Shoot);
+        GrabberGunEvents.shootHookEvent.AddListener(AnimateGrapGunFire);
+        GrabberGunEvents.grabberThrowObjectEvent.AddListener(NullTargetObj);
+        GrabberGunEvents.grabberHoldObjectEvent.AddListener(/*CallPlayerStickToTarget*/CallHold);
         m_MyAnimation = GetComponent<Animation>();
         //GrapGunEvents.hookAttachEvent.AddListener(ToggleGrapGunSpring, bool);
     }
@@ -189,7 +189,7 @@ public static class GrapGunEvents
 
         //Set the spring joint's frequency to the pulling value, making it tighter and faster to pull
         //currentSpringJoint.frequency = springFreqPull;
-        GrapGunEvents.hookPullPlayerToTargetEvent.Invoke();
+        GrabberGunEvents.hookPullPlayerToTargetEvent.Invoke();
     }
 
     void PullTargetToPlayer()
@@ -201,7 +201,7 @@ public static class GrapGunEvents
             if (targetObj.layer == LayerMask.NameToLayer("Enemy"))
             {
                 var enemyTarg = targetObj.GetComponent<EnemyController>();
-                enemyTarg.OnGrapplePulled();
+                enemyTarg.OnGrabberPulled();
             }
             currentSpringJoint.enabled = true;
             //Set the current joint to the Grapple gun spring so the player isn't affected
@@ -284,7 +284,7 @@ public static class GrapGunEvents
             if (!targetObj && !m_IsHookActive
                 && HookModeState == GrapGunMode.Idle)
             {
-                    GrapGunEvents.shootHookEvent.Invoke();
+                    GrabberGunEvents.shootHookEvent.Invoke();
             }
             /*Shoot hook while attached to other object
             //else if (!targetObj && !m_IsHookActive
@@ -330,7 +330,7 @@ public static class GrapGunEvents
         {
             if (targetObj)
             {
-                GrapGunEvents.hookDetachEvent.Invoke();
+                GrabberGunEvents.hookDetachEvent.Invoke();
                 PlayReleaseHookSound();
                 ReleaseTarget(GrapGunMode.Idle);
             }

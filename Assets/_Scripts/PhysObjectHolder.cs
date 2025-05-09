@@ -59,7 +59,7 @@ public class PhysObjectHolder : MonoBehaviour
             grappleGun.CallRelease();
 
             //INVOKE THROW EVENT
-            GrapGunEvents.hookThrowObjectEvent.Invoke();
+            GrabberGunEvents.grabberThrowObjectEvent.Invoke();
         }
     }
 

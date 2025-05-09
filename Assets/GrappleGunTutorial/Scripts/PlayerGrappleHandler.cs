@@ -55,19 +55,19 @@ public class PlayerGrappleHandler : MonoBehaviour
     void Awake()
     {
         // -- HOOK ATTACH/DETACH EVENT LISTENERS
-        GrapGunEvents.hookAttachEvent.AddListener(SetTargetObj);
-        GrapGunEvents.hookDetachEvent.AddListener(NullTargetObj);
+        GrabberGunEvents.hookAttachEvent.AddListener(SetTargetObj);
+        GrabberGunEvents.hookDetachEvent.AddListener(NullTargetObj);
 
         if (m_SwingEnabled)
         { 
-            GrapGunEvents.hookAttachEvent.AddListener(StartSwinging);
-            GrapGunEvents.hookAttachEvent.AddListener(SetHookTransform);
+            GrabberGunEvents.hookAttachEvent.AddListener(StartSwinging);
+            GrabberGunEvents.hookAttachEvent.AddListener(SetHookTransform);
         }
         // -- PULL PLAYER EVENT LISTENERS
-        GrapGunEvents.hookPullPlayerToTargetEvent.AddListener(SetHookTransform);
-        GrapGunEvents.hookPullPlayerToTargetEvent.AddListener(SetHookModeToPlayerToTarget);
+        GrabberGunEvents.hookPullPlayerToTargetEvent.AddListener(SetHookTransform);
+        GrabberGunEvents.hookPullPlayerToTargetEvent.AddListener(SetHookModeToPlayerToTarget);
         // -- THROWING OBJECT EVENT LISTNERS
-        GrapGunEvents.hookThrowObjectEvent.AddListener(NullTargetObj);
+        GrabberGunEvents.grabberThrowObjectEvent.AddListener(NullTargetObj);
 
         // -- INITIALIZE VALUES FOR PLAYER CONTROLLER AND RIGIDBODY2D
         myPlayerController = GetComponent<PlatformerCharacter2D_Alt>();
@@ -196,7 +196,7 @@ public class PlayerGrappleHandler : MonoBehaviour
                     /*if(targetObj.GetComponent<EnemyController>())
                     {
                     }*/
-                    GrapGunEvents.hookHoldObjectEvent.Invoke();
+                    GrabberGunEvents.grabberHoldObjectEvent.Invoke();
 
                     //if attached obj is kinematic
                     //set to kinematic = false

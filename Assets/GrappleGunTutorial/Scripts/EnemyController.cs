@@ -80,7 +80,7 @@ public class EnemyController : MonoBehaviour
     public void SetTagToEnemy()
     { gameObject.tag = "Enemy"; }
 
-    public void OnGrapplePulled()
+    public void OnGrabberPulled()
     {
         myEnemyState = EnemyState.Pulled;
         ChangeLayer();
@@ -93,26 +93,26 @@ public class EnemyController : MonoBehaviour
             var autoMove = GetComponent<AutoMoveSimple>();
             autoMove.GetEnemyStateAndToggleMove();
         }
-        GrapGunEvents.hookHoldObjectEvent.AddListener(OnHeldByPlayer);
+        GrabberGunEvents.grabberHoldObjectEvent.AddListener(OnHeldByPlayer);
     }
 
     public void OnHeldByPlayer()
     {
         myEnemyState = EnemyState.HeldByPlayer;
         hurtsEnemy = false;
-        GrapGunEvents.hookThrowObjectEvent.AddListener(OnGrappleThrown);
-        GrapGunEvents.hookHoldObjectEvent.RemoveListener(OnHeldByPlayer);
+        GrabberGunEvents.grabberThrowObjectEvent.AddListener(OnThrownByPlayer);
+        GrabberGunEvents.grabberHoldObjectEvent.RemoveListener(OnHeldByPlayer);
 
         //if (GetComponent<AutoMoveSimple>().isMoving)
         //GetComponent<AutoMoveSimple>().ChangeMove(false);
     }
 
-    public void OnGrappleThrown()
+    public void OnThrownByPlayer()
     {
         SetTagToPhysObj();
         myEnemyState = EnemyState.Thrown;
         hurtsEnemy = true;
-        GrapGunEvents.hookThrowObjectEvent.RemoveListener(OnGrappleThrown);
+        GrabberGunEvents.grabberThrowObjectEvent.RemoveListener(OnThrownByPlayer);
     }
 
     public void OnRecovered()
@@ -265,14 +265,14 @@ public class EnemyController : MonoBehaviour
     public void AddListeners()
     {
         //GrapGunEvents.hookAttachEvent.AddListener(ChangeLayer);
-        GrapGunEvents.hookPullTargetToPlayerEvent.AddListener(OnGrapplePulled);
-        GrapGunEvents.hookHoldObjectEvent.AddListener(OnGrappleThrown);
+        GrabberGunEvents.hookPullTargetToPlayerEvent.AddListener(OnGrabberPulled);
+        GrabberGunEvents.grabberHoldObjectEvent.AddListener(OnThrownByPlayer);
     }
     public void RemoveListeners()
     {
         //GrapGunEvents.hookAttachEvent.RemoveListener(ChangeLayer);
-        GrapGunEvents.hookPullTargetToPlayerEvent.RemoveListener(OnGrapplePulled);
-        GrapGunEvents.hookHoldObjectEvent.RemoveListener(OnGrappleThrown);
+        GrabberGunEvents.hookPullTargetToPlayerEvent.RemoveListener(OnGrabberPulled);
+        GrabberGunEvents.grabberHoldObjectEvent.RemoveListener(OnThrownByPlayer);
     }
 
     public EnemyState GetMyState()

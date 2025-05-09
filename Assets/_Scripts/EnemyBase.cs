@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//EnemyBase the base Grabbable class for all enemies. Needs this to be able to be picked up and thrown
 public class EnemyBase : Grabbable
 {
     bool pickedUp = false;
