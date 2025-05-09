@@ -18,7 +18,7 @@ public class Grabbable : MonoBehaviour
     protected Color startColor;
     internal Rigidbody2D myBody;
 
-    private void Awake()
+    private void Start()
     {
         myBody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<Collider2D>();
