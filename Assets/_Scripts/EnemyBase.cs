@@ -12,13 +12,14 @@ public class EnemyBase : Grabbable
 
     public delegate void EnemyPickedUp(bool _b);
     public event EnemyPickedUp onEnemyPickedUp;
+    
+    [SerializeField] EnemyFuncOnThrowCollision enemyFuncOnThrowCollision;
 
     PlayerLevelStats p;
     //public event EventHandler EnemyPickedUp;
     
     BasicEnemyMovement basicEnemyMovement;
-    
-    
+
     public override void PickUp()
     {
         base.PickUp();

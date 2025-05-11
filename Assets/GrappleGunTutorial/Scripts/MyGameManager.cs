@@ -59,6 +59,16 @@ public enum EnemyState
     Dead
 }
 
+public enum EnemyFuncOnThrowCollision
+{
+    None,
+    Die,
+    TakeDamage,
+    Recover,
+    Bounce,
+    NonHostile
+}
+
 public enum ElevatorState
 {
     Stopped,
