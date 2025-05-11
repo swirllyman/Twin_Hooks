@@ -26,6 +26,10 @@ public class Grabbable : MonoBehaviour
 
     public delegate void DropCallback();
     public event DropCallback onDrop;
+
+    public delegate void HitGroundCallback();
+    public event HitGroundCallback onHitGround;
+
     private void Start()
     {
         myBody = GetComponent<Rigidbody2D>();

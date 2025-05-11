@@ -268,12 +268,14 @@ public class EnemyController : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if ((collision.gameObject.CompareTag("Environment") || collision.gameObject.GetComponent<GrabbableTerrain>()) 
-            && (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Dropped)
-            && myRB.linearVelocity.magnitude <= 1f)
+            && (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Dropped || myEnemyState == EnemyState.Thrown)
+            && myRB.linearVelocity.magnitude <= 1f 
+            && (myRB.linearVelocityY <= 0.001 && myRB.linearVelocityY >= -0.001) )
         {
+            /*myRB.linearVelocity = Vector2.zero;
             //what if object hits a wall/ceiling instead of ground?
             Debug.Log("Invoking Recover");
-            Invoke("OnRecovered", 0.7f);
+            Invoke("OnRecovered", 0.7f);*/
         }
     }
 
@@ -313,24 +315,25 @@ public class EnemyController : MonoBehaviour
                 invincibleTime = defaultInvincibleTimer;
             }
         }
-        //if(myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Thrown)
-        //{
-        //    if(myRB.velocity.y == 0)
-        //    {
-        //        transform.Rotate(Vector3.up);
-        //        myRB.isKinematic = true;
-        //        myRB.velocity.Set(0,0);
-        //        myEnemyState = EnemyState.Normal;
-        //    }
-        //}
-        //if(m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up) 
-        //    && myEnemyState == EnemyState.Thrown)
-        //{
-        //    transform.rotation = 
-        //        Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.up), .05f);
-        //    if(transform.rotation != Quaternion.Euler(transform.up))
-        //    { OnRecovered(); }
-        //}
+        /*      if(myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Thrown)
+                {
+                    if(myRB.velocity.y == 0)
+                    {
+                        transform.Rotate(Vector3.up);
+                        myRB.isKinematic = true;
+                        myRB.velocity.Set(0,0);
+                        myEnemyState = EnemyState.Normal;
+                    }
+                }
+                if(m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up) 
+                    && myEnemyState == EnemyState.Thrown)
+                {
+                    transform.rotation = 
+                        Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.up), .05f);
+                    if(transform.rotation != Quaternion.Euler(transform.up))
+                    { OnRecovered(); }
+                }
+        */
     }
 
     private void FixedUpdate()
@@ -349,13 +352,14 @@ public class EnemyController : MonoBehaviour
                 StartRecover();
             }
         }
-        /*if (m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up)
-            && myEnemyState == EnemyState.Thrown)
+        if (m_IsTurningUpright && transform.rotation != Quaternion.Euler(transform.up)
+            && (myEnemyState == EnemyState.Damaged || myEnemyState == EnemyState.Dropped || myEnemyState == EnemyState.Thrown))
         {
-            transform.rotation =
-                Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.up), .5f);
-            if (transform.rotation != Quaternion.Euler(transform.up))
+            transform.rotation = Quaternion.Euler(transform.up);
+            myRB.WakeUp();
+            //Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.up), .5f);
+            if (transform.rotation == Quaternion.Euler(transform.up))
             { OnRecovered(); }
-        }*/
+        }
     }
 }
